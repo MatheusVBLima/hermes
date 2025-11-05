@@ -1,10 +1,10 @@
 # Hermes Bot - Setup Guide
 
-## Fase 1: MVP Completo! ✅
+## Status Atual: Fase 2 Completa! ✅
 
-O bot está pronto para uso básico com os seguintes recursos implementados:
+O bot está pronto para moderação completa com banco de dados e logging de eventos.
 
-### Recursos Implementados
+### ✅ Fase 1: MVP Foundation (Completo)
 
 #### Arquitetura
 - ✅ Sistema de carregamento automático de comandos
@@ -14,7 +14,7 @@ O bot está pronto para uso básico com os seguintes recursos implementados:
 - ✅ Tratamento de erros global
 - ✅ TypeScript com strict mode
 
-#### Comandos Utilitários
+#### Comandos Utilitários (4 comandos)
 - ✅ `/ping` - Verificar latência do bot
 - ✅ `/help` - Listar todos os comandos disponíveis
 - ✅ `/userinfo` - Informações detalhadas sobre usuários
@@ -25,6 +25,33 @@ O bot está pronto para uso básico com os seguintes recursos implementados:
 - ✅ Embed builders reutilizáveis
 - ✅ Validação de configuração
 - ✅ Gerenciamento de ambiente
+
+### ✅ Fase 2: Sistema de Moderação (Completo)
+
+#### Database Integration
+- ✅ Prisma ORM + SQLite
+- ✅ Migrations automáticas
+- ✅ 5 modelos de dados (Guild, Warning, ModLog, UserLevel, UserEconomy)
+- ✅ Conexão automática e graceful shutdown
+
+#### Comandos de Moderação (6 comandos)
+- ✅ `/ban` - Banir usuários (com opção de deletar mensagens 0-7 dias)
+- ✅ `/kick` - Expulsar usuários do servidor
+- ✅ `/timeout` - Timeout temporário (1-40320 minutos)
+- ✅ `/warn` - Sistema de avisos com contador
+- ✅ `/warnings` - Ver histórico de avisos
+- ✅ `/clear` - Deletar mensagens em massa (1-100)
+
+#### Event Logging (2 eventos)
+- ✅ `messageDelete` - Log de mensagens deletadas
+- ✅ `messageUpdate` - Log de mensagens editadas
+
+#### Recursos de Segurança
+- ✅ Verificação de permissões
+- ✅ Validação de hierarquia de roles
+- ✅ DM notifications para usuários afetados
+- ✅ Database logging de todas ações
+- ✅ Proteção anti-self-moderation
 
 ---
 
@@ -137,10 +164,19 @@ Após iniciar o bot, você deve ver no console:
 
 No seu servidor Discord, teste os comandos:
 
+**Utilitários:**
 1. `/ping` - Deve mostrar a latência
-2. `/help` - Deve listar todos os comandos
+2. `/help` - Deve listar todos os comandos (10 total)
 3. `/userinfo` - Deve mostrar suas informações
 4. `/serverinfo` - Deve mostrar informações do servidor
+
+**Moderação (requer permissões):**
+5. `/warn @user reason:Teste` - Avisar usuário
+6. `/warnings @user` - Ver avisos do usuário
+7. `/timeout @user duration:5 reason:Teste` - Timeout de 5 minutos
+8. `/kick @user reason:Teste` - Expulsar usuário
+9. `/ban @user reason:Teste` - Banir usuário
+10. `/clear amount:10` - Deletar 10 mensagens
 
 ---
 
@@ -150,30 +186,42 @@ No seu servidor Discord, teste os comandos:
 hermes/
 ├── src/
 │   ├── commands/
-│   │   ├── utility/       # Comandos utilitários
-│   │   ├── moderation/    # (Fase 2)
+│   │   ├── utility/       # 4 comandos utilitários ✅
+│   │   ├── moderation/    # 6 comandos de moderação ✅
 │   │   ├── economy/       # (Fase 4)
 │   │   ├── fun/          # (Fase 5)
 │   │   ├── games/        # (Fase 5)
 │   │   └── music/        # (Fase 5)
 │   ├── events/
-│   │   ├── ready.ts              # Bot startup
-│   │   └── interactionCreate.ts  # Command handler
+│   │   ├── ready.ts              # Bot startup ✅
+│   │   ├── interactionCreate.ts  # Command handler ✅
+│   │   ├── messageDelete.ts      # Log mensagens deletadas ✅
+│   │   └── messageUpdate.ts      # Log mensagens editadas ✅
 │   ├── utils/
-│   │   ├── logger.ts     # Sistema de logging
-│   │   └── embeds.ts     # Embed builders
+│   │   ├── logger.ts     # Sistema de logging ✅
+│   │   └── embeds.ts     # Embed builders ✅
 │   ├── config/
-│   │   └── config.ts     # Configuração
-│   ├── services/         # (Futuro)
-│   ├── models/           # (Futuro)
-│   ├── index.ts          # Entry point
-│   └── deploy-commands.ts # Deploy script
+│   │   └── config.ts     # Configuração ✅
+│   ├── services/
+│   │   └── database.ts   # Prisma client ✅
+│   ├── types/
+│   │   └── index.ts      # TypeScript types ✅
+│   ├── index.ts          # Entry point ✅
+│   └── deploy-commands.ts # Deploy script ✅
+├── prisma/
+│   ├── schema.prisma     # Database schema ✅
+│   ├── migrations/       # Database migrations ✅
+│   └── dev.db           # SQLite database ✅
+├── scripts/
+│   └── check-setup.ts   # Setup verification ✅
 ├── dist/                 # Compilado (gerado)
 ├── .env                  # Variáveis de ambiente (NÃO COMMITAR)
-├── .env.example          # Template
-├── package.json
-├── tsconfig.json
-└── README.md
+├── .env.example          # Template ✅
+├── package.json          # ✅
+├── tsconfig.json         # ✅
+├── prisma.config.ts     # Prisma config ✅
+├── SETUP.md             # Este arquivo ✅
+└── README.md            # ✅
 ```
 
 ---
@@ -211,35 +259,47 @@ hermes/
 
 ---
 
-## Próximas Fases
+## Roadmap de Fases
 
-### Fase 2: Sistema de Moderação (Próximo)
-- [ ] Comandos: ban, kick, timeout, warn, clear
-- [ ] Integração com banco de dados
-- [ ] Sistema de logs
-- [ ] Auto-moderação
+### ✅ Fase 1: MVP Foundation (COMPLETO)
+- ✅ Sistema base do bot
+- ✅ 4 comandos utilitários
+- ✅ Sistema de logging e embeds
+- ✅ Deploy automático de comandos
 
-### Fase 3: Engajamento Comunitário
+### ✅ Fase 2: Sistema de Moderação (COMPLETO)
+- ✅ 6 comandos: ban, kick, timeout, warn, warnings, clear
+- ✅ Integração com banco de dados (Prisma + SQLite)
+- ✅ Sistema de logs (messageDelete, messageUpdate)
+- ✅ Sistema de avisos persistente
+
+### 🔄 Fase 3: Engajamento Comunitário (Em Desenvolvimento)
 - [ ] Sistema de níveis (XP)
-- [ ] Leaderboard
-- [ ] Sistema de boas-vindas
-- [ ] Auto-roles
+- [ ] Comando /rank para ver nível
+- [ ] Comando /leaderboard para top usuários
+- [ ] Sistema de boas-vindas com mensagens personalizadas
+- [ ] Auto-roles baseados em nível
+- [ ] Evento guildMemberAdd para boas-vindas
 
-### Fase 4: Economia
-- [ ] Moeda virtual
-- [ ] Daily rewards
-- [ ] Mini-games
-- [ ] Shop system
+### Fase 4: Sistema de Economia
+- [ ] Moeda virtual por servidor
+- [ ] Comando /balance
+- [ ] Comando /daily (recompensa diária)
+- [ ] Comando /work (ganhar moedas)
+- [ ] Comando /pay (transferir moedas)
+- [ ] Mini-games: coinflip, slots, blackjack
+- [ ] Sistema de shop
 
 ### Fase 5: Entretenimento
-- [ ] Bot de música
-- [ ] Comandos fun
-- [ ] Jogos interativos
+- [ ] Bot de música (play, queue, skip, etc)
+- [ ] Comandos fun (meme, joke, 8ball)
+- [ ] Jogos interativos (trivia, rps, hangman)
 
 ### Fase 6: Features Avançadas
 - [ ] Integração com IA (ChatGPT, DALL-E)
-- [ ] Sistema de tickets
-- [ ] Dashboard web
+- [ ] Sistema de tickets de suporte
+- [ ] Dashboard web com Next.js
+- [ ] Estatísticas e analytics
 
 ---
 
@@ -254,6 +314,7 @@ Para mais informações, consulte:
 
 ## Status Atual
 
-**Versão:** 1.0.0 (MVP)
-**Status:** ✅ Pronto para uso básico
-**Última atualização:** 2025-11-04
+**Versão:** 2.0.0 (Moderation Complete)
+**Status:** ✅ Sistema de Moderação Completo
+**Total de Comandos:** 10 (4 utilitários + 6 moderação)
+**Última atualização:** 2025-11-05
