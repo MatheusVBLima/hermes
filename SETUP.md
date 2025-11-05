@@ -1,8 +1,8 @@
 # Hermes Bot - Setup Guide
 
-## Status Atual: Fase 2 Completa! ✅
+## Status Atual: Fase 3 Completa! ✅
 
-O bot está pronto para moderação completa com banco de dados e logging de eventos.
+O bot está com sistema completo de moderação, XP/níveis e engajamento comunitário!
 
 ### ✅ Fase 1: MVP Foundation (Completo)
 
@@ -14,11 +14,13 @@ O bot está pronto para moderação completa com banco de dados e logging de eve
 - ✅ Tratamento de erros global
 - ✅ TypeScript com strict mode
 
-#### Comandos Utilitários (4 comandos)
+#### Comandos Utilitários (6 comandos)
 - ✅ `/ping` - Verificar latência do bot
 - ✅ `/help` - Listar todos os comandos disponíveis
 - ✅ `/userinfo` - Informações detalhadas sobre usuários
 - ✅ `/serverinfo` - Estatísticas completas do servidor
+- ✅ `/rank` - Ver nível e XP (Fase 3)
+- ✅ `/leaderboard` - Top usuários do servidor (Fase 3)
 
 #### Sistema de Utilitários
 - ✅ Logger colorido e estruturado
@@ -52,6 +54,31 @@ O bot está pronto para moderação completa com banco de dados e logging de eve
 - ✅ DM notifications para usuários afetados
 - ✅ Database logging de todas ações
 - ✅ Proteção anti-self-moderation
+
+### ✅ Fase 3: Sistema de Engajamento (Completo)
+
+#### Sistema de XP e Níveis
+- ✅ Ganho automático de XP ao enviar mensagens (15-25 XP)
+- ✅ Cooldown de 60 segundos entre ganhos
+- ✅ Fórmula de nível: floor(0.1 * sqrt(xp))
+- ✅ Notificações automáticas de level-up
+- ✅ Persistência no banco de dados
+
+#### Comandos de Leveling (2 comandos)
+- ✅ `/rank [user]` - Ver nível, XP, rank e progresso
+- ✅ `/leaderboard [page]` - Top 10 usuários (paginado)
+
+#### Sistema de Boas-vindas (3 eventos)
+- ✅ `messageCreate` - Tracking de XP automático
+- ✅ `guildMemberAdd` - Mensagens de boas-vindas
+- ✅ `guildMemberRemove` - Mensagens de despedida
+
+#### Recursos de Engajamento
+- ✅ Barra de progresso visual para próximo nível
+- ✅ Medalhas para top 3 (🥇🥈🥉)
+- ✅ Placeholders personalizáveis: {user}, {username}, {server}, {memberCount}
+- ✅ Canal de boas-vindas configurável
+- ✅ Sistema de ranking por servidor
 
 ---
 
@@ -166,17 +193,19 @@ No seu servidor Discord, teste os comandos:
 
 **Utilitários:**
 1. `/ping` - Deve mostrar a latência
-2. `/help` - Deve listar todos os comandos (10 total)
+2. `/help` - Deve listar todos os comandos (12 total)
 3. `/userinfo` - Deve mostrar suas informações
 4. `/serverinfo` - Deve mostrar informações do servidor
+5. `/rank` - Ver seu nível e XP
+6. `/leaderboard` - Ver top usuários do servidor
 
 **Moderação (requer permissões):**
-5. `/warn @user reason:Teste` - Avisar usuário
-6. `/warnings @user` - Ver avisos do usuário
-7. `/timeout @user duration:5 reason:Teste` - Timeout de 5 minutos
-8. `/kick @user reason:Teste` - Expulsar usuário
-9. `/ban @user reason:Teste` - Banir usuário
-10. `/clear amount:10` - Deletar 10 mensagens
+7. `/warn @user reason:Teste` - Avisar usuário
+8. `/warnings @user` - Ver avisos do usuário
+9. `/timeout @user duration:5 reason:Teste` - Timeout de 5 minutos
+10. `/kick @user reason:Teste` - Expulsar usuário
+11. `/ban @user reason:Teste` - Banir usuário
+12. `/clear amount:10` - Deletar 10 mensagens
 
 ---
 
@@ -186,7 +215,7 @@ No seu servidor Discord, teste os comandos:
 hermes/
 ├── src/
 │   ├── commands/
-│   │   ├── utility/       # 4 comandos utilitários ✅
+│   │   ├── utility/       # 6 comandos utilitários ✅
 │   │   ├── moderation/    # 6 comandos de moderação ✅
 │   │   ├── economy/       # (Fase 4)
 │   │   ├── fun/          # (Fase 5)
@@ -195,8 +224,11 @@ hermes/
 │   ├── events/
 │   │   ├── ready.ts              # Bot startup ✅
 │   │   ├── interactionCreate.ts  # Command handler ✅
+│   │   ├── messageCreate.ts      # XP tracking ✅
 │   │   ├── messageDelete.ts      # Log mensagens deletadas ✅
-│   │   └── messageUpdate.ts      # Log mensagens editadas ✅
+│   │   ├── messageUpdate.ts      # Log mensagens editadas ✅
+│   │   ├── guildMemberAdd.ts     # Boas-vindas ✅
+│   │   └── guildMemberRemove.ts  # Despedidas ✅
 │   ├── utils/
 │   │   ├── logger.ts     # Sistema de logging ✅
 │   │   └── embeds.ts     # Embed builders ✅
@@ -273,13 +305,15 @@ hermes/
 - ✅ Sistema de logs (messageDelete, messageUpdate)
 - ✅ Sistema de avisos persistente
 
-### 🔄 Fase 3: Engajamento Comunitário (Em Desenvolvimento)
-- [ ] Sistema de níveis (XP)
-- [ ] Comando /rank para ver nível
-- [ ] Comando /leaderboard para top usuários
-- [ ] Sistema de boas-vindas com mensagens personalizadas
-- [ ] Auto-roles baseados em nível
-- [ ] Evento guildMemberAdd para boas-vindas
+### ✅ Fase 3: Engajamento Comunitário (COMPLETO)
+- ✅ Sistema de níveis (XP)
+- ✅ Comando /rank para ver nível
+- ✅ Comando /leaderboard para top usuários
+- ✅ Sistema de boas-vindas com mensagens personalizadas
+- ✅ Evento guildMemberAdd para boas-vindas
+- ✅ Evento guildMemberRemove para despedidas
+- ✅ Tracking automático de XP ao enviar mensagens
+- ⚪ Auto-roles baseados em nível (opcional - não implementado)
 
 ### Fase 4: Sistema de Economia
 - [ ] Moeda virtual por servidor
@@ -314,7 +348,8 @@ Para mais informações, consulte:
 
 ## Status Atual
 
-**Versão:** 2.0.0 (Moderation Complete)
-**Status:** ✅ Sistema de Moderação Completo
-**Total de Comandos:** 10 (4 utilitários + 6 moderação)
+**Versão:** 3.0.0 (Community Engagement Complete)
+**Status:** ✅ Sistema de Engajamento Comunitário Completo
+**Total de Comandos:** 12 (6 utilitários + 6 moderação)
+**Total de Eventos:** 7 (ready, interactionCreate, messageCreate, messageDelete, messageUpdate, guildMemberAdd, guildMemberRemove)
 **Última atualização:** 2025-11-05
