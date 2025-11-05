@@ -1,8 +1,8 @@
 # Hermes Bot - Setup Guide
 
-## Status Atual: Fase 4 Completa! ✅
+## Status Atual: Fase 5 Completa! ✅
 
-O bot está com sistema completo de moderação, XP/níveis, engajamento comunitário e economia!
+O bot está com sistema completo de moderação, XP/níveis, engajamento comunitário, economia e entretenimento!
 
 ### ✅ Fase 1: MVP Foundation (Completo)
 
@@ -105,6 +105,26 @@ O bot está com sistema completo de moderação, XP/níveis, engajamento comunit
 - ✅ Mensagens de trabalho aleatórias
 - ✅ Embeds visuais com emojis temáticos
 - ✅ Rank econômico integrado ao /balance
+
+### ✅ Fase 5: Entretenimento (Completo)
+
+#### Comandos Fun (5 comandos)
+- ✅ `/8ball <pergunta>` - Bola mágica 8 com respostas aleatórias
+- ✅ `/roll <dados>` - Rolar dados de RPG (formato: 2d20, 3d6, etc)
+- ✅ `/rps <escolha>` - Pedra, papel ou tesoura contra o bot
+- ✅ `/avatar [user]` - Ver avatar em alta resolução (até 4096px)
+- ✅ `/trivia` - Jogo de perguntas e respostas interativo
+
+#### Recursos de Entretenimento
+- ✅ 20 respostas diferentes na bola mágica 8
+- ✅ Sistema de dados flexível (1d6 até 100d1000)
+- ✅ Visualização colorida de resultados
+- ✅ Botões interativos para jogos
+- ✅ Sistema de trivia com 10 perguntas
+- ✅ Timer de 30 segundos para trivia
+- ✅ Múltiplas categorias de perguntas
+- ✅ Downloads de avatar em múltiplas resoluções
+- ✅ Suporte para avatar de servidor personalizado
 
 ---
 
@@ -219,7 +239,7 @@ No seu servidor Discord, teste os comandos:
 
 **Utilitários:**
 1. `/ping` - Deve mostrar a latência
-2. `/help` - Deve listar todos os comandos (18 total)
+2. `/help` - Deve listar todos os comandos (23 total)
 3. `/userinfo` - Deve mostrar suas informações
 4. `/serverinfo` - Deve mostrar informações do servidor
 5. `/rank` - Ver seu nível e XP
@@ -241,6 +261,13 @@ No seu servidor Discord, teste os comandos:
 17. `/coinflip lado:cara aposta:50` - Apostar 50 moedas em cara
 18. `/dice aposta:100` - Jogar dados contra o bot
 
+**Diversão:**
+19. `/8ball pergunta:"Vai chover?"` - Bola mágica 8
+20. `/roll dados:2d20` - Rolar 2 dados de 20 lados
+21. `/rps escolha:pedra` - Pedra, papel ou tesoura
+22. `/avatar @user` - Ver avatar do usuário
+23. `/trivia` - Responder pergunta de trivia
+
 ---
 
 ## Estrutura do Projeto
@@ -252,9 +279,9 @@ hermes/
 │   │   ├── utility/       # 6 comandos utilitários ✅
 │   │   ├── moderation/    # 6 comandos de moderação ✅
 │   │   ├── economy/       # 6 comandos de economia ✅
-│   │   ├── fun/          # (Fase 5)
-│   │   ├── games/        # (Fase 5)
-│   │   └── music/        # (Fase 5)
+│   │   ├── fun/          # 5 comandos de diversão ✅
+│   │   ├── games/        # (Fase 6)
+│   │   └── music/        # (Fase 6)
 │   ├── events/
 │   │   ├── ready.ts              # Bot startup ✅
 │   │   ├── interactionCreate.ts  # Command handler ✅
@@ -359,10 +386,14 @@ hermes/
 - ⚪ Sistema de shop (não implementado)
 - ⚪ Slots e blackjack (não implementados)
 
-### Fase 5: Entretenimento
-- [ ] Bot de música (play, queue, skip, etc)
-- [ ] Comandos fun (meme, joke, 8ball)
-- [ ] Jogos interativos (trivia, rps, hangman)
+### ✅ Fase 5: Entretenimento (COMPLETO)
+- ✅ Comando /8ball (bola mágica 8)
+- ✅ Comando /roll (rolar dados de RPG)
+- ✅ Comando /rps (pedra, papel, tesoura)
+- ✅ Comando /avatar (ver avatar em alta resolução)
+- ✅ Comando /trivia (jogo de perguntas e respostas)
+- ⚪ Bot de música (não implementado - requer biblioteca externa)
+- ⚪ Memes do Reddit (não implementado)
 
 ### Fase 6: Features Avançadas
 - [ ] Integração com IA (ChatGPT, DALL-E)
@@ -383,8 +414,8 @@ Para mais informações, consulte:
 
 ## Status Atual
 
-**Versão:** 4.0.0 (Economy System Complete)
-**Status:** ✅ Sistema de Economia Completo
-**Total de Comandos:** 18 (6 utilitários + 6 moderação + 6 economia)
+**Versão:** 5.0.0 (Entertainment System Complete)
+**Status:** ✅ Sistema de Entretenimento Completo
+**Total de Comandos:** 23 (6 utilitários + 6 moderação + 6 economia + 5 diversão)
 **Total de Eventos:** 7 (ready, interactionCreate, messageCreate, messageDelete, messageUpdate, guildMemberAdd, guildMemberRemove)
 **Última atualização:** 2025-11-05
