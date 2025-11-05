@@ -8,7 +8,9 @@
       "Bash(git commit:*)",
       "Bash(npm install:*)",
       "Bash(npx prisma init:*)",
-      "Bash(npx prisma:*)"
+      "Bash(npx prisma:*)",
+      "Bash(mkdir:*)",
+      "Bash(npm run deploy-commands:guild:*)"
     ],
     "deny": [],
     "ask": []

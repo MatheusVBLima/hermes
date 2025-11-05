@@ -1,8 +1,8 @@
 # Hermes Bot - Setup Guide
 
-## Status Atual: Fase 5 Completa! ✅
+## Status Atual: Bot Completo! 🎉
 
-O bot está com sistema completo de moderação, XP/níveis, engajamento comunitário, economia e entretenimento!
+O bot está com sistema completo de moderação, XP/níveis, engajamento comunitário, economia, entretenimento E música!
 
 ### ✅ Fase 1: MVP Foundation (Completo)
 
@@ -126,6 +126,31 @@ O bot está com sistema completo de moderação, XP/níveis, engajamento comunit
 - ✅ Downloads de avatar em múltiplas resoluções
 - ✅ Suporte para avatar de servidor personalizado
 
+### ✅ Fase 6: Bot de Música (Completo)
+
+#### Comandos de Música (7 comandos)
+- ✅ `/play <query>` - Tocar música do YouTube (URL ou pesquisa)
+- ✅ `/pause` - Pausar a música atual
+- ✅ `/resume` - Retomar a música pausada
+- ✅ `/skip` - Pular a música atual
+- ✅ `/stop` - Parar música e limpar fila
+- ✅ `/queue [página]` - Ver fila de músicas (paginado)
+- ✅ `/nowplaying` - Informações da música atual
+
+#### Recursos de Música
+- ✅ Streaming direto do YouTube
+- ✅ Sistema de fila completo
+- ✅ Pesquisa automática no YouTube
+- ✅ Suporte para URLs diretas
+- ✅ Thumbnails e informações detalhadas
+- ✅ Controles de playback completos (pause/resume/skip)
+- ✅ Auto-desconexão após 5min de inatividade
+- ✅ Formatação de duração (MM:SS e HH:MM:SS)
+- ✅ Sistema de atribuição (mostra quem pediu cada música)
+- ✅ Fila paginada para servidores grandes
+
+**Nota:** Requer FFmpeg instalado no sistema. Ver [MUSIC_SETUP.md](./MUSIC_SETUP.md) para detalhes.
+
 ---
 
 ## Como Configurar
@@ -239,7 +264,7 @@ No seu servidor Discord, teste os comandos:
 
 **Utilitários:**
 1. `/ping` - Deve mostrar a latência
-2. `/help` - Deve listar todos os comandos (23 total)
+2. `/help` - Deve listar todos os comandos (30 total)
 3. `/userinfo` - Deve mostrar suas informações
 4. `/serverinfo` - Deve mostrar informações do servidor
 5. `/rank` - Ver seu nível e XP
@@ -268,6 +293,15 @@ No seu servidor Discord, teste os comandos:
 22. `/avatar @user` - Ver avatar do usuário
 23. `/trivia` - Responder pergunta de trivia
 
+**Música:**
+24. `/play query:"Never Gonna Give You Up"` - Tocar música do YouTube
+25. `/pause` - Pausar música
+26. `/resume` - Retomar música
+27. `/skip` - Pular música
+28. `/stop` - Parar e desconectar
+29. `/queue` - Ver fila de músicas
+30. `/nowplaying` - Ver música atual
+
 ---
 
 ## Estrutura do Projeto
@@ -280,8 +314,7 @@ hermes/
 │   │   ├── moderation/    # 6 comandos de moderação ✅
 │   │   ├── economy/       # 6 comandos de economia ✅
 │   │   ├── fun/          # 5 comandos de diversão ✅
-│   │   ├── games/        # (Fase 6)
-│   │   └── music/        # (Fase 6)
+│   │   └── music/        # 7 comandos de música ✅
 │   ├── events/
 │   │   ├── ready.ts              # Bot startup ✅
 │   │   ├── interactionCreate.ts  # Command handler ✅
@@ -296,7 +329,10 @@ hermes/
 │   ├── config/
 │   │   └── config.ts     # Configuração ✅
 │   ├── services/
-│   │   └── database.ts   # Prisma client ✅
+│   │   ├── database.ts   # Prisma client ✅
+│   │   └── music/        # Music player system ✅
+│   │       ├── MusicPlayer.ts   # Audio player ✅
+│   │       └── MusicManager.ts  # Player manager ✅
 │   ├── types/
 │   │   └── index.ts      # TypeScript types ✅
 │   ├── index.ts          # Entry point ✅
@@ -392,10 +428,22 @@ hermes/
 - ✅ Comando /rps (pedra, papel, tesoura)
 - ✅ Comando /avatar (ver avatar em alta resolução)
 - ✅ Comando /trivia (jogo de perguntas e respostas)
-- ⚪ Bot de música (não implementado - requer biblioteca externa)
-- ⚪ Memes do Reddit (não implementado)
 
-### Fase 6: Features Avançadas
+### ✅ Fase 6: Bot de Música (COMPLETO)
+- ✅ Comando /play (tocar música do YouTube)
+- ✅ Comando /pause (pausar música)
+- ✅ Comando /resume (retomar música)
+- ✅ Comando /skip (pular música)
+- ✅ Comando /stop (parar e limpar fila)
+- ✅ Comando /queue (ver fila de músicas)
+- ✅ Comando /nowplaying (música atual)
+- ✅ Sistema de fila completo
+- ✅ Streaming do YouTube
+- ✅ Pesquisa automática
+- ⚪ Suporte para Spotify (não implementado)
+- ⚪ Playlists do YouTube (não implementado)
+
+### Fase 7: Features Avançadas (FUTURO)
 - [ ] Integração com IA (ChatGPT, DALL-E)
 - [ ] Sistema de tickets de suporte
 - [ ] Dashboard web com Next.js
@@ -414,8 +462,12 @@ Para mais informações, consulte:
 
 ## Status Atual
 
-**Versão:** 5.0.0 (Entertainment System Complete)
-**Status:** ✅ Sistema de Entretenimento Completo
-**Total de Comandos:** 23 (6 utilitários + 6 moderação + 6 economia + 5 diversão)
+**Versão:** 6.0.0 (Music Bot Complete)
+**Status:** ✅ Bot Completo com Sistema de Música
+**Total de Comandos:** 30 (6 utilitários + 6 moderação + 6 economia + 5 diversão + 7 música)
 **Total de Eventos:** 7 (ready, interactionCreate, messageCreate, messageDelete, messageUpdate, guildMemberAdd, guildMemberRemove)
 **Última atualização:** 2025-11-05
+
+**Requisitos Adicionais para Música:**
+- FFmpeg instalado no sistema (ver [MUSIC_SETUP.md](./MUSIC_SETUP.md))
+- Permissões: Connect, Speak, Use Voice Activity
