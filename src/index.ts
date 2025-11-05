@@ -4,6 +4,7 @@ import { join, dirname } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
 import { config, validateConfig } from './config/config.js';
 import { logger } from './utils/logger.js';
+import { connectDatabase, disconnectDatabase } from './services/database.js';
 
 // ESM equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -144,6 +145,9 @@ class HermesBot {
         try {
             logger.info('Starting Hermes Discord Bot...');
 
+            // Connect to database
+            await connectDatabase();
+
             // Load commands and events
             await this.loadCommands();
             await this.loadEvents();
@@ -164,6 +168,7 @@ class HermesBot {
     public async shutdown(): Promise<void> {
         logger.info('Shutting down bot...');
         this.client.destroy();
+        await disconnectDatabase();
         logger.success('Bot shut down successfully');
         process.exit(0);
     }

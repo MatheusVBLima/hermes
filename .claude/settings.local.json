@@ -3,7 +3,12 @@
     "allow": [
       "Bash(cat:*)",
       "Bash(npm install)",
-      "Bash(git add:*)"
+      "Bash(git add:*)",
+      "Bash(git commit -m \"$(cat <<''EOF''\nfeat: Implement Phase 1 - MVP Foundation\n\nImplemented complete bot foundation with TypeScript, Discord.js v14, and modern best practices.\n\nCore Features:\n- Bot client with automatic command and event loading\n- TypeScript strict mode with ESM modules\n- Structured logging system with colors\n- Reusable embed builders for consistent UI\n- Environment configuration with validation\n\nCommands Implemented:\n- /ping - Check bot latency and API response time\n- /help - Display all commands with categories\n- /userinfo - Detailed user information\n- /serverinfo - Complete server statistics\n\nInfrastructure:\n- Automatic command loader from /commands/**/*.ts\n- Automatic event loader from /events/*.ts\n- Error handling with user-friendly messages\n- Graceful shutdown handlers\n- Setup verification script\n\nProject Structure:\n- src/commands/utility/ - Utility commands\n- src/events/ - Event handlers\n- src/utils/ - Logger and embed utilities\n- src/config/ - Configuration management\n- scripts/ - Utility scripts\n\nConfiguration:\n- package.json with npm scripts\n- tsconfig.json with strict TypeScript config\n- .env.example template\n- SETUP.md with complete instructions\n\nReady for Phase 2: Moderation System\n\nGenerated with [Claude Code](https://claude.com/claude-code)\n\nCo-Authored-By: Claude <noreply@anthropic.com>\nEOF\n)\")",
+      "Bash(git commit:*)",
+      "Bash(npm install:*)",
+      "Bash(npx prisma init:*)",
+      "Bash(npx prisma:*)"
     ],
     "deny": [],
     "ask": []

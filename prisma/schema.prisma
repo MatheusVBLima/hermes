@@ -1,0 +1,91 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+// Guild Configuration
+model Guild {
+  id                String   @id
+  name              String
+  welcomeChannelId  String?
+  welcomeMessage    String?
+  logChannelId      String?
+  createdAt         DateTime @default(now())
+  updatedAt         DateTime @updatedAt
+
+  warnings          Warning[]
+  modLogs           ModLog[]
+}
+
+// User Warnings
+model Warning {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  username    String
+  guildId     String
+  moderatorId String
+  moderator   String
+  reason      String
+  createdAt   DateTime @default(now())
+
+  guild       Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@index([userId, guildId])
+}
+
+// Moderation Logs
+model ModLog {
+  id          Int      @id @default(autoincrement())
+  guildId     String
+  action      String   // ban, kick, timeout, warn, clear
+  targetId    String
+  targetTag   String
+  moderatorId String
+  moderatorTag String
+  reason      String?
+  duration    String?  // For timeouts
+  metadata    String?  // JSON for additional data
+  createdAt   DateTime @default(now())
+
+  guild       Guild    @relation(fields: [guildId], references: [id], onDelete: Cascade)
+
+  @@index([guildId])
+  @@index([targetId])
+}
+
+// User Levels (for Phase 3)
+model UserLevel {
+  id        Int      @id @default(autoincrement())
+  userId    String
+  guildId   String
+  xp        Int      @default(0)
+  level     Int      @default(0)
+  lastXpAt  DateTime @default(now())
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([userId, guildId])
+  @@index([guildId, xp])
+}
+
+// User Economy (for Phase 4)
+model UserEconomy {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  guildId     String
+  balance     Int      @default(0)
+  lastDaily   DateTime?
+  lastWork    DateTime?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@unique([userId, guildId])
+  @@index([guildId, balance])
+}
