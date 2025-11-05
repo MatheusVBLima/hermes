@@ -1,26 +1,30 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
-import { MusicManager } from '../../services/music/MusicManager.js';
-import { errorEmbed, EmbedColors } from '../../utils/embeds.js';
-import { EmbedBuilder } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, GuildMember } from 'discord.js';
+import { getDistube } from '../../services/music/DisTubeService.js';
+import { errorEmbed, successEmbed } from '../../utils/embeds.js';
 
 export const data = new SlashCommandBuilder()
     .setName('stop')
     .setDescription('Parar a música e limpar a fila');
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-    const player = MusicManager.getPlayer(interaction.guildId!);
+    const member = interaction.member as GuildMember;
+    const voiceChannel = member.voice.channel;
 
-    if (!player.isConnected()) {
-        const embed = errorEmbed('Erro', 'Não estou conectado a nenhum canal de voz!');
+    if (!voiceChannel) {
+        const embed = errorEmbed('Erro', 'Você precisa estar em um canal de voz!');
         return await interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
-    player.disconnect();
-    MusicManager.removePlayer(interaction.guildId!);
+    const distube = getDistube();
+    const queue = distube.getQueue(interaction.guildId!);
 
-    const embed = new EmbedBuilder()
-        .setColor(EmbedColors.SUCCESS)
-        .setDescription('⏹️ Música parada e fila limpa. Desconectado do canal de voz.');
+    if (!queue) {
+        const embed = errorEmbed('Erro', 'Não há nada tocando no momento!');
+        return await interaction.reply({ embeds: [embed], ephemeral: true });
+    }
 
+    await queue.stop();
+
+    const embed = successEmbed('⏹️ Parado', 'Música parada e fila limpa. Desconectado do canal de voz.');
     await interaction.reply({ embeds: [embed] });
 }

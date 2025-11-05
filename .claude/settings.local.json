@@ -10,7 +10,9 @@
       "Bash(npx prisma init:*)",
       "Bash(npx prisma:*)",
       "Bash(mkdir:*)",
-      "Bash(npm run deploy-commands:guild:*)"
+      "Bash(npm run deploy-commands:guild:*)",
+      "Bash(npm uninstall:*)",
+      "Bash(yt-dlp:*)"
     ],
     "deny": [],
     "ask": []

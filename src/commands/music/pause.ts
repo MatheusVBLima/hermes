@@ -1,7 +1,6 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction } from 'discord.js';
 import { MusicManager } from '../../services/music/MusicManager.js';
-import { errorEmbed, EmbedColors } from '../../utils/embeds.js';
-import { EmbedBuilder } from 'discord.js';
+import { errorEmbed, successEmbed } from '../../utils/embeds.js';
 
 export const data = new SlashCommandBuilder()
     .setName('pause')
@@ -22,9 +21,6 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
     player.pause();
 
-    const embed = new EmbedBuilder()
-        .setColor(EmbedColors.WARNING)
-        .setDescription('⏸️ Música pausada');
-
+    const embed = successEmbed('⏸️ Pausado', 'Música pausada com sucesso!');
     await interaction.reply({ embeds: [embed] });
 }

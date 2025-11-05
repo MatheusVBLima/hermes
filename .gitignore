@@ -52,5 +52,8 @@ coverage/
 # Temporary files
 tmp/
 temp/
+*-player-script.js
 
 /src/generated/prisma
+
+docs

@@ -1,0 +1,63 @@
+diff --git a/node_modules/@distube/yt-dlp/dist/index.js b/node_modules/@distube/yt-dlp/dist/index.js
+index b17b126..2572b97 100644
+--- a/node_modules/@distube/yt-dlp/dist/index.js
++++ b/node_modules/@distube/yt-dlp/dist/index.js
+@@ -73,16 +73,53 @@ var args = /* @__PURE__ */ __name((url, flags = {}) => [url].concat((0, import_d
+ var json = /* @__PURE__ */ __name((url, flags, options) => {
+   const process2 = (0, import_node_child_process.spawn)(YTDLP_PATH, args(url, flags), options);
+   return new Promise((resolve, reject) => {
+-    let output = "";
++    let stdout = "";
++    let stderr = "";
+     process2.stdout?.on("data", (chunk) => {
+-      output += chunk;
++      stdout += chunk;
+     });
+     process2.stderr?.on("data", (chunk) => {
+-      output += chunk;
++      stderr += chunk;
+     });
+     process2.on("close", (code) => {
+-      if (code === 0) resolve(JSON.parse(output));
+-      else reject(new Error(output));
++      if (code === 0) {
++        // Filtrar mensagens de depreciação do stderr antes de fazer parse
++        // Remove linhas que começam com "Deprecated" ou outros avisos comuns
++        const cleanStderr = stderr.split('\n')
++          .filter(line => !line.trim().startsWith('Deprecated') && 
++                         !line.trim().startsWith('WARNING') &&
++                         !line.trim().startsWith('WARN') &&
++                         line.trim().length > 0)
++          .join('\n');
++        
++        // Tentar parse do stdout primeiro (JSON válido)
++        // Se falhar, tentar filtrar stderr e adicionar ao stdout
++        let jsonOutput = stdout.trim();
++        
++        // Se stdout está vazio ou não é JSON válido, usar stderr filtrado
++        if (!jsonOutput || jsonOutput.length === 0) {
++          jsonOutput = cleanStderr.trim();
++        }
++        
++        // Remover qualquer texto antes do primeiro { ou [
++        const jsonStart = jsonOutput.search(/[\{\[]/);
++        if (jsonStart > 0) {
++          jsonOutput = jsonOutput.substring(jsonStart);
++        }
++        
++        try {
++          resolve(JSON.parse(jsonOutput));
++        } catch (parseError) {
++          // Se ainda falhar, tentar apenas stdout
++          try {
++            resolve(JSON.parse(stdout.trim()));
++          } catch (e) {
++            reject(new Error(`Failed to parse JSON: ${e.message}. Output: ${stdout.substring(0, 200)}...`));
++          }
++        }
++      } else {
++        reject(new Error(stderr || stdout || 'Unknown error'));
++      }
+     });
+     process2.on("error", reject);
+   });

@@ -7,6 +7,7 @@ import {
     joinVoiceChannel,
     VoiceConnection,
     VoiceConnectionStatus,
+    StreamType,
 } from '@discordjs/voice';
 import { VoiceBasedChannel } from 'discord.js';
 import playdl from 'play-dl';
@@ -110,6 +111,7 @@ export class MusicPlayer {
     private async playSong(song: Song): Promise<void> {
         try {
             const stream = await playdl.stream(song.url);
+
             const resource = createAudioResource(stream.stream, {
                 inputType: stream.type,
             });

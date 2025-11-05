@@ -2,12 +2,9 @@ import {
     SlashCommandBuilder,
     ChatInputCommandInteraction,
     GuildMember,
-    EmbedBuilder,
 } from 'discord.js';
-import playdl from 'play-dl';
-import { MusicManager } from '../../services/music/MusicManager.js';
-import { Song } from '../../services/music/MusicPlayer.js';
-import { errorEmbed, EmbedColors } from '../../utils/embeds.js';
+import { getDistube } from '../../services/music/DisTubeService.js';
+import { errorEmbed } from '../../utils/embeds.js';
 import { logger } from '../../utils/logger.js';
 
 export const data = new SlashCommandBuilder()
@@ -16,7 +13,7 @@ export const data = new SlashCommandBuilder()
     .addStringOption((option) =>
         option
             .setName('query')
-            .setDescription('Nome da música ou URL do YouTube')
+            .setDescription('URL ou nome da música do YouTube')
             .setRequired(true)
     );
 
@@ -38,124 +35,46 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
         await interaction.deferReply();
 
-        // Buscar música no YouTube
-        let videoInfo;
+        // Timeout de 30 segundos para evitar que fique "pensando" indefinidamente
+        const timeoutPromise = new Promise((_, reject) => {
+            setTimeout(() => reject(new Error('Timeout: O comando demorou muito para responder.')), 30000);
+        });
+
         try {
-            if (playdl.yt_validate(query) === 'video') {
-                // É uma URL direta
-                videoInfo = await playdl.video_info(query);
-            } else {
-                // Pesquisar no YouTube
-                const search = await playdl.search(query, {
-                    limit: 1,
-                    source: { youtube: 'video' },
-                });
+            const distube = getDistube();
+            
+            logger.info(`[Play] Starting play for query: ${query}`);
+            logger.info(`[Play] Voice channel: ${voiceChannel.id}, Text channel: ${interaction.channel?.id}`);
+            
+            // Race entre o play e o timeout
+            await Promise.race([
+                distube.play(voiceChannel, query, {
+                    member: member,
+                    textChannel: interaction.channel!,
+                }),
+                timeoutPromise,
+            ]);
 
-                if (search.length === 0) {
-                    const embed = errorEmbed(
-                        'Não encontrado',
-                        `Não foi possível encontrar: **${query}**`
-                    );
-                    return await interaction.editReply({ embeds: [embed] });
-                }
-
-                videoInfo = await playdl.video_info(search[0].url);
+            logger.info(`[Play] Play command completed successfully`);
+            
+            // DisTube will send the message through events
+            await interaction.deleteReply();
+        } catch (error: any) {
+            logger.error('Error in play command:', error);
+            logger.error('Error details - message:', error?.message);
+            logger.error('Error details - stack:', error?.stack);
+            
+            // Verificar se é erro de timeout ou parsing
+            let errorMessage = 'Ocorreu um erro ao executar o comando.';
+            if (error.message?.includes('Timeout')) {
+                errorMessage = 'O comando demorou muito para responder. Isso pode ser causado por problemas com o YouTube. Tente novamente ou use uma URL direta.';
+            } else if (error.message?.includes('Deprecated') || error.message?.includes('JSON')) {
+                errorMessage = 'Erro ao processar a música. O YouTube pode estar bloqueando o acesso. Tente novamente em alguns instantes.';
+            } else if (error.message) {
+                errorMessage = error.message;
             }
-        } catch (error) {
-            logger.error('Error searching for music:', error);
-            const embed = errorEmbed(
-                'Erro na busca',
-                'Ocorreu um erro ao buscar a música. Tente novamente.'
-            );
-            return await interaction.editReply({ embeds: [embed] });
-        }
-
-        const video = videoInfo.video_details;
-
-        // Criar objeto de música
-        const song: Song = {
-            title: video.title!,
-            url: video.url,
-            duration: video.durationInSec,
-            thumbnail: video.thumbnails[0].url,
-            requestedBy: {
-                id: interaction.user.id,
-                username: interaction.user.username,
-            },
-        };
-
-        // Obter ou criar player
-        const player = MusicManager.getPlayer(interaction.guildId!);
-
-        // Conectar ao canal de voz se ainda não estiver conectado
-        if (!player.isConnected()) {
-            try {
-                await player.join(voiceChannel);
-            } catch (error) {
-                logger.error('Error joining voice channel:', error);
-                const embed = errorEmbed(
-                    'Erro de conexão',
-                    'Não foi possível conectar ao canal de voz.'
-                );
-                return await interaction.editReply({ embeds: [embed] });
-            }
-        }
-
-        // Adicionar música à fila
-        player.addSong(song);
-
-        // Formatar duração
-        const duration = formatDuration(song.duration);
-
-        // Se não estiver tocando, começar a tocar
-        if (!player.isPlaying) {
-            await player.play();
-
-            const embed = new EmbedBuilder()
-                .setColor(EmbedColors.SUCCESS)
-                .setTitle('🎵 Tocando Agora')
-                .setDescription(`[${song.title}](${song.url})`)
-                .setThumbnail(song.thumbnail)
-                .addFields(
-                    {
-                        name: '⏱️ Duração',
-                        value: duration,
-                        inline: true,
-                    },
-                    {
-                        name: '👤 Pedido por',
-                        value: song.requestedBy.username,
-                        inline: true,
-                    }
-                )
-                .setTimestamp();
-
-            await interaction.editReply({ embeds: [embed] });
-        } else {
-            const embed = new EmbedBuilder()
-                .setColor(EmbedColors.INFO)
-                .setTitle('➕ Adicionado à Fila')
-                .setDescription(`[${song.title}](${song.url})`)
-                .setThumbnail(song.thumbnail)
-                .addFields(
-                    {
-                        name: '⏱️ Duração',
-                        value: duration,
-                        inline: true,
-                    },
-                    {
-                        name: '📊 Posição na Fila',
-                        value: `#${player.queue.length + 1}`,
-                        inline: true,
-                    },
-                    {
-                        name: '👤 Pedido por',
-                        value: song.requestedBy.username,
-                        inline: true,
-                    }
-                )
-                .setTimestamp();
-
+            
+            const embed = errorEmbed('Erro', errorMessage);
             await interaction.editReply({ embeds: [embed] });
         }
     } catch (error) {
@@ -171,19 +90,4 @@ export async function execute(interaction: ChatInputCommandInteraction) {
             await interaction.reply({ embeds: [embed], ephemeral: true });
         }
     }
-}
-
-/**
- * Format duration in seconds to MM:SS or HH:MM:SS
- */
-function formatDuration(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-
-    if (hours > 0) {
-        return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
 }

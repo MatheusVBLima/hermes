@@ -185,9 +185,18 @@ process.on('SIGTERM', () => bot.shutdown());
 // Handle unhandled errors
 process.on('unhandledRejection', (error: Error) => {
     logger.error('Unhandled promise rejection:', error);
+    // Don't shutdown on unhandled rejection - log and continue
+    // This prevents bot from crashing on minor errors
 });
 
 process.on('uncaughtException', (error: Error) => {
     logger.error('Uncaught exception:', error);
-    bot.shutdown();
+    // Only shutdown on critical errors
+    // Check if it's a critical error that requires shutdown
+    if (error.message.includes('EADDRINUSE') || error.message.includes('ECONNREFUSED')) {
+        logger.error('Critical error detected, shutting down...');
+        bot.shutdown();
+    } else {
+        logger.warn('Non-critical error, continuing operation...');
+    }
 });

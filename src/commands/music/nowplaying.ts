@@ -1,5 +1,5 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, EmbedBuilder } from 'discord.js';
-import { MusicManager } from '../../services/music/MusicManager.js';
+import { getDistube } from '../../services/music/DisTubeService.js';
 import { errorEmbed, EmbedColors } from '../../utils/embeds.js';
 
 export const data = new SlashCommandBuilder()
@@ -7,59 +7,44 @@ export const data = new SlashCommandBuilder()
     .setDescription('Ver a música que está tocando agora');
 
 export async function execute(interaction: ChatInputCommandInteraction) {
-    const player = MusicManager.getPlayer(interaction.guildId!);
+    const distube = getDistube();
+    const queue = distube.getQueue(interaction.guildId!);
 
-    if (!player.isConnected() || !player.currentSong) {
+    if (!queue) {
         const embed = errorEmbed('Erro', 'Não há nada tocando no momento!');
         return await interaction.reply({ embeds: [embed], ephemeral: true });
     }
 
-    const song = player.currentSong;
-    const duration = formatDuration(song.duration);
+    const song = queue.songs[0];
 
     const embed = new EmbedBuilder()
         .setColor(EmbedColors.INFO)
         .setTitle('🎵 Tocando Agora')
-        .setDescription(`[${song.title}](${song.url})`)
-        .setThumbnail(song.thumbnail)
+        .setDescription(`[${song.name}](${song.url})`)
+        .setThumbnail(song.thumbnail || '')
         .addFields(
             {
                 name: '⏱️ Duração',
-                value: duration,
+                value: song.formattedDuration,
                 inline: true,
             },
             {
                 name: '👤 Pedido por',
-                value: song.requestedBy.username,
+                value: song.user?.username || 'Desconhecido',
                 inline: true,
             },
             {
                 name: '📊 Fila',
-                value: `${player.queue.length} música(s)`,
+                value: `${queue.songs.length - 1} música(s)`,
                 inline: true,
             },
             {
                 name: '▶️ Status',
-                value: player.isPaused ? 'Pausado' : 'Tocando',
+                value: queue.paused ? 'Pausado' : 'Tocando',
                 inline: true,
             }
         )
         .setTimestamp();
 
     await interaction.reply({ embeds: [embed] });
-}
-
-/**
- * Format duration in seconds to MM:SS or HH:MM:SS
- */
-function formatDuration(seconds: number): string {
-    const hours = Math.floor(seconds / 3600);
-    const minutes = Math.floor((seconds % 3600) / 60);
-    const secs = Math.floor(seconds % 60);
-
-    if (hours > 0) {
-        return `${hours}:${minutes.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
-    }
-
-    return `${minutes}:${secs.toString().padStart(2, '0')}`;
 }
