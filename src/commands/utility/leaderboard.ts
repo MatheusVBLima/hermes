@@ -68,8 +68,13 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
 
         // Build leaderboard
         const embed = infoEmbed(`🏆 XP Leaderboard - ${interaction.guild.name}`)
-            .setDescription(`Showing top users (Page ${page}/${totalPages})`)
-            .setThumbnail(interaction.guild.iconURL({ size: 128 }) || '');
+            .setDescription(`Showing top users (Page ${page}/${totalPages})`);
+
+        // Add server icon if available
+        const iconURL = interaction.guild.iconURL({ size: 128 });
+        if (iconURL) {
+            embed.setThumbnail(iconURL);
+        }
 
         const leaderboardText = await Promise.all(
             topUsers.map(async (userData, index) => {
