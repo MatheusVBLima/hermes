@@ -1,4 +1,4 @@
-import { Events, Interaction, ChatInputCommandInteraction } from 'discord.js';
+import { Events, Interaction, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { logger } from '../utils/logger.js';
 import { errorEmbed } from '../utils/embeds.js';
 
@@ -37,7 +37,7 @@ async function handleChatInputCommand(interaction: ChatInputCommandInteraction):
         logger.warn(`Command not found: ${interaction.commandName}`);
         await interaction.reply({
             embeds: [errorEmbed('Command Not Found', 'This command does not exist or has been removed.')],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         });
         return;
     }
@@ -61,7 +61,7 @@ async function handleChatInputCommand(interaction: ChatInputCommandInteraction):
                     'There was an error executing this command. Please try again later.'
                 ),
             ],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         };
 
         // Reply or follow up depending on interaction state

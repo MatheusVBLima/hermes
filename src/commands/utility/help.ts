@@ -1,4 +1,4 @@
-import { SlashCommandBuilder, ChatInputCommandInteraction, Collection } from 'discord.js';
+import { SlashCommandBuilder, ChatInputCommandInteraction, Collection, MessageFlags } from 'discord.js';
 import { infoEmbed } from '../../utils/embeds.js';
 
 export const data = new SlashCommandBuilder()
@@ -36,7 +36,7 @@ async function showCommandDetails(
     if (!command) {
         await interaction.reply({
             embeds: [infoEmbed('Command Not Found', `The command \`${commandName}\` does not exist.`)],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         });
         return;
     }
@@ -57,7 +57,7 @@ async function showCommandDetails(
         embed.addFields({ name: 'Options', value: options, inline: false });
     }
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
 }
 
 /**
@@ -69,7 +69,7 @@ async function showAllCommands(interaction: ChatInputCommandInteraction): Promis
     if (!commands || commands.size === 0) {
         await interaction.reply({
             embeds: [infoEmbed('No Commands', 'No commands are currently available.')],
-            ephemeral: true,
+            flags: MessageFlags.Ephemeral,
         });
         return;
     }
@@ -112,7 +112,7 @@ async function showAllCommands(interaction: ChatInputCommandInteraction): Promis
 
     embed.setFooter({ text: `Total Commands: ${commands.size}` });
 
-    await interaction.reply({ embeds: [embed], ephemeral: true });
+    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
 }
 
 /**
