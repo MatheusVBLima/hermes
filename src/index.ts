@@ -70,15 +70,18 @@ class HermesBot {
                 const fileUrl = pathToFileURL(filePath).href;
 
                 try {
-                    const command = await import(fileUrl);
+                    const commandModule = await import(fileUrl);
 
-                    if (!command.data || !command.execute) {
+                    if (!commandModule.data || !commandModule.execute) {
                         logger.warn(`Command at ${filePath} is missing required "data" or "execute" export`);
                         continue;
                     }
 
-                    // Add category to command
-                    command.category = category.charAt(0).toUpperCase() + category.slice(1);
+                    // Create command object with category
+                    const command = {
+                        ...commandModule,
+                        category: category.charAt(0).toUpperCase() + category.slice(1),
+                    };
 
                     this.commands.set(command.data.name, command);
                     commandCount++;
