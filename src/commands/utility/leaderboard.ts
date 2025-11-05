@@ -1,6 +1,7 @@
 import { SlashCommandBuilder, ChatInputCommandInteraction, MessageFlags } from 'discord.js';
 import { infoEmbed, errorEmbed } from '../../utils/embeds.js';
 import { prisma } from '../../services/database.js';
+import { logger } from '../../utils/logger.js';
 
 export const data = new SlashCommandBuilder()
     .setName('leaderboard')
@@ -132,10 +133,18 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         await interaction.reply({ embeds: [embed] });
 
     } catch (error) {
-        await interaction.reply({
+        logger.error('Error in leaderboard command:', error);
+
+        const errorMessage = {
             embeds: [errorEmbed('Error', 'Failed to fetch leaderboard. Please try again.')],
             flags: MessageFlags.Ephemeral,
-        });
+        };
+
+        if (interaction.replied || interaction.deferred) {
+            await interaction.followUp(errorMessage);
+        } else {
+            await interaction.reply(errorMessage);
+        }
     }
 }
 
