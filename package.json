@@ -1,0 +1,37 @@
+{
+  "name": "hermes",
+  "version": "1.0.0",
+  "description": "A modern, feature-rich Discord bot built with TypeScript and Discord.js v14",
+  "main": "dist/index.js",
+  "type": "module",
+  "scripts": {
+    "dev": "tsx watch src/index.ts",
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "deploy-commands": "tsx src/deploy-commands.ts",
+    "deploy-commands:guild": "tsx src/deploy-commands.ts --guild",
+    "check": "tsx scripts/check-setup.ts"
+  },
+  "keywords": [
+    "discord",
+    "bot",
+    "discord-bot",
+    "typescript",
+    "discord.js"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.4.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20.11.16",
+    "typescript": "^5.3.3",
+    "tsx": "^4.7.0",
+    "nodemon": "^3.0.3"
+  },
+  "engines": {
+    "node": ">=20.6.0"
+  }
+}
