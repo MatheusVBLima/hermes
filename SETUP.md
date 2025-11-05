@@ -1,8 +1,8 @@
 # Hermes Bot - Setup Guide
 
-## Status Atual: Fase 3 Completa! ✅
+## Status Atual: Fase 4 Completa! ✅
 
-O bot está com sistema completo de moderação, XP/níveis e engajamento comunitário!
+O bot está com sistema completo de moderação, XP/níveis, engajamento comunitário e economia!
 
 ### ✅ Fase 1: MVP Foundation (Completo)
 
@@ -79,6 +79,32 @@ O bot está com sistema completo de moderação, XP/níveis e engajamento comuni
 - ✅ Placeholders personalizáveis: {user}, {username}, {server}, {memberCount}
 - ✅ Canal de boas-vindas configurável
 - ✅ Sistema de ranking por servidor
+
+### ✅ Fase 4: Sistema de Economia (Completo)
+
+#### Moeda Virtual
+- ✅ Sistema de moedas por servidor
+- ✅ Saldo persistente no banco de dados
+- ✅ Transações entre usuários
+- ✅ Sistema de ranking por moedas
+
+#### Comandos de Economia (6 comandos)
+- ✅ `/balance [user]` - Ver saldo próprio ou de outro usuário
+- ✅ `/daily` - Recompensa diária (500 moedas, cooldown 24h)
+- ✅ `/work` - Trabalhar para ganhar moedas (50-150, cooldown 1h)
+- ✅ `/pay <user> <amount>` - Transferir moedas entre usuários
+
+#### Mini-Games (2 comandos)
+- ✅ `/coinflip <cara/coroa> <aposta>` - Apostar em cara ou coroa (50% chance)
+- ✅ `/dice <aposta>` - Jogar dados contra o bot (maior número ganha)
+
+#### Recursos de Economia
+- ✅ Cooldowns para prevenir farming
+- ✅ Validações de saldo e transações
+- ✅ Sistema de apostas com riscos e recompensas
+- ✅ Mensagens de trabalho aleatórias
+- ✅ Embeds visuais com emojis temáticos
+- ✅ Rank econômico integrado ao /balance
 
 ---
 
@@ -193,7 +219,7 @@ No seu servidor Discord, teste os comandos:
 
 **Utilitários:**
 1. `/ping` - Deve mostrar a latência
-2. `/help` - Deve listar todos os comandos (12 total)
+2. `/help` - Deve listar todos os comandos (18 total)
 3. `/userinfo` - Deve mostrar suas informações
 4. `/serverinfo` - Deve mostrar informações do servidor
 5. `/rank` - Ver seu nível e XP
@@ -207,6 +233,14 @@ No seu servidor Discord, teste os comandos:
 11. `/ban @user reason:Teste` - Banir usuário
 12. `/clear amount:10` - Deletar 10 mensagens
 
+**Economia:**
+13. `/balance` - Ver seu saldo
+14. `/daily` - Resgatar recompensa diária (500 moedas)
+15. `/work` - Trabalhar para ganhar moedas (50-150)
+16. `/pay @user quantia:100` - Transferir 100 moedas
+17. `/coinflip lado:cara aposta:50` - Apostar 50 moedas em cara
+18. `/dice aposta:100` - Jogar dados contra o bot
+
 ---
 
 ## Estrutura do Projeto
@@ -217,7 +251,7 @@ hermes/
 │   ├── commands/
 │   │   ├── utility/       # 6 comandos utilitários ✅
 │   │   ├── moderation/    # 6 comandos de moderação ✅
-│   │   ├── economy/       # (Fase 4)
+│   │   ├── economy/       # 6 comandos de economia ✅
 │   │   ├── fun/          # (Fase 5)
 │   │   ├── games/        # (Fase 5)
 │   │   └── music/        # (Fase 5)
@@ -315,14 +349,15 @@ hermes/
 - ✅ Tracking automático de XP ao enviar mensagens
 - ⚪ Auto-roles baseados em nível (opcional - não implementado)
 
-### Fase 4: Sistema de Economia
-- [ ] Moeda virtual por servidor
-- [ ] Comando /balance
-- [ ] Comando /daily (recompensa diária)
-- [ ] Comando /work (ganhar moedas)
-- [ ] Comando /pay (transferir moedas)
-- [ ] Mini-games: coinflip, slots, blackjack
-- [ ] Sistema de shop
+### ✅ Fase 4: Sistema de Economia (COMPLETO)
+- ✅ Moeda virtual por servidor
+- ✅ Comando /balance (ver saldo e rank)
+- ✅ Comando /daily (recompensa diária de 500 moedas)
+- ✅ Comando /work (ganhar 50-150 moedas)
+- ✅ Comando /pay (transferir moedas)
+- ✅ Mini-games: /coinflip e /dice
+- ⚪ Sistema de shop (não implementado)
+- ⚪ Slots e blackjack (não implementados)
 
 ### Fase 5: Entretenimento
 - [ ] Bot de música (play, queue, skip, etc)
@@ -348,8 +383,8 @@ Para mais informações, consulte:
 
 ## Status Atual
 
-**Versão:** 3.0.0 (Community Engagement Complete)
-**Status:** ✅ Sistema de Engajamento Comunitário Completo
-**Total de Comandos:** 12 (6 utilitários + 6 moderação)
+**Versão:** 4.0.0 (Economy System Complete)
+**Status:** ✅ Sistema de Economia Completo
+**Total de Comandos:** 18 (6 utilitários + 6 moderação + 6 economia)
 **Total de Eventos:** 7 (ready, interactionCreate, messageCreate, messageDelete, messageUpdate, guildMemberAdd, guildMemberRemove)
 **Última atualização:** 2025-11-05
