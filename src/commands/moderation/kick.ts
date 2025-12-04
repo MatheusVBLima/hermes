@@ -6,18 +6,18 @@ import { logger } from '../../utils/logger.js';
 
 export const data = new SlashCommandBuilder()
     .setName('kick')
-    .setDescription('Kick a user from the server')
+    .setDescription('Expulsar um usuário do servidor')
     .setDefaultMemberPermissions(PermissionFlagsBits.KickMembers)
     .addUserOption(option =>
         option
             .setName('user')
-            .setDescription('The user to kick')
+            .setDescription('Usuário que será expulso')
             .setRequired(true)
     )
     .addStringOption(option =>
         option
             .setName('reason')
-            .setDescription('Reason for the kick')
+            .setDescription('Motivo da expulsão')
             .setRequired(false)
     );
 

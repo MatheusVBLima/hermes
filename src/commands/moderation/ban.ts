@@ -6,24 +6,24 @@ import { logger } from '../../utils/logger.js';
 
 export const data = new SlashCommandBuilder()
     .setName('ban')
-    .setDescription('Ban a user from the server')
+    .setDescription('Banir um usuário do servidor')
     .setDefaultMemberPermissions(PermissionFlagsBits.BanMembers)
     .addUserOption(option =>
         option
             .setName('user')
-            .setDescription('The user to ban')
+            .setDescription('Usuário que será banido')
             .setRequired(true)
     )
     .addStringOption(option =>
         option
             .setName('reason')
-            .setDescription('Reason for the ban')
+            .setDescription('Motivo do banimento')
             .setRequired(false)
     )
     .addIntegerOption(option =>
         option
             .setName('delete_days')
-            .setDescription('Number of days of messages to delete (0-7)')
+            .setDescription('Dias de mensagens a apagar (0-7)')
             .setMinValue(0)
             .setMaxValue(7)
             .setRequired(false)

@@ -3,14 +3,14 @@ import { infoEmbed } from '../../utils/embeds.js';
 
 export const data = new SlashCommandBuilder()
     .setName('serverinfo')
-    .setDescription('Display information about this server');
+    .setDescription('Exibir informações sobre este servidor');
 
 export async function execute(interaction: ChatInputCommandInteraction): Promise<void> {
     const guild = interaction.guild;
 
     if (!guild) {
         await interaction.reply({
-            content: 'This command can only be used in a server.',
+            content: 'Este comando só pode ser usado em um servidor.',
             ephemeral: true,
         });
         return;
@@ -37,45 +37,45 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     const boostTier = guild.premiumTier;
     const boostCount = guild.premiumSubscriptionCount || 0;
 
-    const embed = infoEmbed(`Server Info: ${guild.name}`)
+    const embed = infoEmbed(`Informações do servidor: ${guild.name}`)
         .setThumbnail(guild.iconURL({ size: 256 }) || '')
         .addFields(
             {
-                name: '👑 Owner',
+                name: '👑 Dono',
                 value: `${owner.user.tag}`,
                 inline: true,
             },
             {
-                name: '🆔 Server ID',
+                name: '🆔 ID do servidor',
                 value: `\`${guild.id}\``,
                 inline: true,
             },
             {
-                name: '📅 Created',
+                name: '📅 Criado',
                 value: time(guild.createdAt, TimestampStyles.RelativeTime),
                 inline: true,
             },
             {
-                name: '👥 Members',
+                name: '👥 Membros',
                 value: [
                     `Total: **${members}**`,
-                    `Humans: **${humans}**`,
+                    `Humanos: **${humans}**`,
                     `Bots: **${bots}**`,
                 ].join('\n'),
                 inline: true,
             },
             {
-                name: '📺 Channels',
+                name: '📺 Canais',
                 value: [
                     `Total: **${totalChannels}**`,
-                    `Text: **${textChannels}**`,
-                    `Voice: **${voiceChannels}**`,
-                    `Categories: **${categories}**`,
+                    `Texto: **${textChannels}**`,
+                    `Voz: **${voiceChannels}**`,
+                    `Categorias: **${categories}**`,
                 ].join('\n'),
                 inline: true,
             },
             {
-                name: '📋 Other',
+                name: '📋 Outros',
                 value: [
                     `Roles: **${guild.roles.cache.size}**`,
                     `Emojis: **${guild.emojis.cache.size}**`,
@@ -84,14 +84,14 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
                 inline: true,
             },
             {
-                name: '🔒 Verification Level',
+                name: '🔒 Nível de verificação',
                 value: getVerificationLevel(guild.verificationLevel),
                 inline: true,
             },
             {
-                name: '💎 Boost Status',
+                name: '💎 Boosts',
                 value: [
-                    `Tier: **${boostTier}**`,
+                    `Nível: **${boostTier}**`,
                     `Boosts: **${boostCount}**`,
                 ].join('\n'),
                 inline: true,
@@ -116,12 +116,12 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
  */
 function getVerificationLevel(level: GuildVerificationLevel): string {
     const levels: Record<GuildVerificationLevel, string> = {
-        [GuildVerificationLevel.None]: 'None',
-        [GuildVerificationLevel.Low]: 'Low',
-        [GuildVerificationLevel.Medium]: 'Medium',
-        [GuildVerificationLevel.High]: 'High',
-        [GuildVerificationLevel.VeryHigh]: 'Very High',
+        [GuildVerificationLevel.None]: 'Nenhum',
+        [GuildVerificationLevel.Low]: 'Baixo',
+        [GuildVerificationLevel.Medium]: 'Médio',
+        [GuildVerificationLevel.High]: 'Alto',
+        [GuildVerificationLevel.VeryHigh]: 'Muito alto',
     };
 
-    return levels[level] || 'Unknown';
+    return levels[level] || 'Desconhecido';
 }

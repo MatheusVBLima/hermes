@@ -6,18 +6,18 @@ import { logger } from '../../utils/logger.js';
 
 export const data = new SlashCommandBuilder()
     .setName('timeout')
-    .setDescription('Timeout a user (mute them temporarily)')
+    .setDescription('Silenciar temporariamente um usuário (timeout)')
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
     .addUserOption(option =>
         option
             .setName('user')
-            .setDescription('The user to timeout')
+            .setDescription('Usuário que receberá timeout')
             .setRequired(true)
     )
     .addIntegerOption(option =>
         option
             .setName('duration')
-            .setDescription('Duration in minutes (1-40320 = 28 days max)')
+            .setDescription('Duração em minutos (1-40320 = até 28 dias)')
             .setMinValue(1)
             .setMaxValue(40320)
             .setRequired(true)
@@ -25,7 +25,7 @@ export const data = new SlashCommandBuilder()
     .addStringOption(option =>
         option
             .setName('reason')
-            .setDescription('Reason for the timeout')
+            .setDescription('Motivo do timeout')
             .setRequired(false)
     );
 

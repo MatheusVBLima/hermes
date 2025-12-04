@@ -5,11 +5,11 @@ import { logger } from '../../utils/logger.js';
 
 export const data = new SlashCommandBuilder()
     .setName('leaderboard')
-    .setDescription('View the server\'s XP leaderboard')
+    .setDescription('Ver o ranking de XP do servidor')
     .addIntegerOption(option =>
         option
             .setName('page')
-            .setDescription('Page number (shows 10 users per page)')
+            .setDescription('Número da página (10 usuários por página)')
             .setMinValue(1)
             .setRequired(false)
     );
@@ -17,7 +17,7 @@ export const data = new SlashCommandBuilder()
 export async function execute(interaction: ChatInputCommandInteraction): Promise<void> {
     if (!interaction.guild) {
         await interaction.reply({
-            embeds: [errorEmbed('Error', 'This command can only be used in a server.')],
+            embeds: [errorEmbed('Erro', 'Este comando só pode ser usado em um servidor.')],
             flags: MessageFlags.Ephemeral,
         });
         return;
@@ -37,7 +37,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
 
         if (totalUsers === 0) {
             await interaction.reply({
-                embeds: [infoEmbed('Empty Leaderboard', 'No users have earned XP yet. Start chatting to gain XP!')],
+                embeds: [infoEmbed('Ranking vazio', 'Nenhum usuário ganhou XP ainda. Comece a conversar para ganhar XP!')],
                 flags: MessageFlags.Ephemeral,
             });
             return;
@@ -48,7 +48,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         // Validate page number
         if (page > totalPages) {
             await interaction.reply({
-                embeds: [errorEmbed('Invalid Page', `There are only ${totalPages} page(s) available.`)],
+                embeds: [errorEmbed('Página inválida', `Existem apenas ${totalPages} página(s) disponíveis.`)],
                 flags: MessageFlags.Ephemeral,
             });
             return;
@@ -67,8 +67,8 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         });
 
         // Build leaderboard
-        const embed = infoEmbed(`🏆 XP Leaderboard - ${interaction.guild.name}`)
-            .setDescription(`Showing top users (Page ${page}/${totalPages})`);
+        const embed = infoEmbed(`🏆 Ranking de XP - ${interaction.guild.name}`)
+            .setDescription(`Mostrando os melhores usuários (Página ${page}/${totalPages})`);
 
         // Add server icon if available
         const iconURL = interaction.guild.iconURL({ size: 128 });
@@ -93,8 +93,8 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
                 } catch {
                     // User not found (left server or deleted account)
                     return [
-                        `${medal} **#${globalRank}** - Unknown User`,
-                        `└ Level **${userData.level}** • **${userData.xp.toLocaleString()}** XP`,
+                        `${medal} **#${globalRank}** - Usuário desconhecido`,
+                        `└ Nível **${userData.level}** • **${userData.xp.toLocaleString()}** XP`,
                     ].join('\n');
                 }
             })
@@ -130,7 +130,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
             const userPage = Math.ceil(userRank / perPage);
             if (userPage !== page) {
                 embed.setFooter({
-                    text: `Your rank: #${userRank} • Level ${userLevel.level} • ${userLevel.xp.toLocaleString()} XP`,
+                    text: `Sua posição: #${userRank} • Nível ${userLevel.level} • ${userLevel.xp.toLocaleString()} XP`,
                 });
             }
         }

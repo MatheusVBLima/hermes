@@ -6,18 +6,18 @@ import { logger } from '../../utils/logger.js';
 
 export const data = new SlashCommandBuilder()
     .setName('warn')
-    .setDescription('Warn a user')
+    .setDescription('Advertir um usuário')
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
     .addUserOption(option =>
         option
             .setName('user')
-            .setDescription('The user to warn')
+            .setDescription('Usuário que será advertido')
             .setRequired(true)
     )
     .addStringOption(option =>
         option
             .setName('reason')
-            .setDescription('Reason for the warning')
+            .setDescription('Motivo da advertência')
             .setRequired(true)
     );
 

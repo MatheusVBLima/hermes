@@ -3,11 +3,11 @@ import { infoEmbed } from '../../utils/embeds.js';
 
 export const data = new SlashCommandBuilder()
     .setName('help')
-    .setDescription('Display all available commands and their descriptions')
+    .setDescription('Mostra todos os comandos disponíveis e suas descrições')
     .addStringOption(option =>
         option
             .setName('command')
-            .setDescription('Get detailed information about a specific command')
+            .setDescription('Mostra detalhes de um comando específico')
             .setRequired(false)
     );
 
@@ -35,16 +35,16 @@ async function showCommandDetails(
 
     if (!command) {
         await interaction.reply({
-            embeds: [infoEmbed('Command Not Found', `The command \`${commandName}\` does not exist.`)],
+            embeds: [infoEmbed('Comando não encontrado', `O comando \`${commandName}\` não existe.`)],
             flags: MessageFlags.Ephemeral,
         });
         return;
     }
 
-    const embed = infoEmbed(`Command: /${command.data.name}`)
+    const embed = infoEmbed(`Comando: /${command.data.name}`)
         .setDescription(command.data.description)
         .addFields({
-            name: 'Usage',
+            name: 'Uso',
             value: `\`/${command.data.name}\``,
             inline: false,
         });
@@ -54,7 +54,7 @@ async function showCommandDetails(
         const options = command.data.options
             .map((opt: any) => `• \`${opt.name}\`: ${opt.description}`)
             .join('\n');
-        embed.addFields({ name: 'Options', value: options, inline: false });
+        embed.addFields({ name: 'Opções', value: options, inline: false });
     }
 
     await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
@@ -68,17 +68,17 @@ async function showAllCommands(interaction: ChatInputCommandInteraction): Promis
 
     if (!commands || commands.size === 0) {
         await interaction.reply({
-            embeds: [infoEmbed('No Commands', 'No commands are currently available.')],
+            embeds: [infoEmbed('Nenhum comando', 'Nenhum comando disponível no momento.')],
             flags: MessageFlags.Ephemeral,
         });
         return;
     }
 
-    // Group commands by category (based on folder structure)
+    // Agrupar comandos por categoria (com base na pasta)
     const categories = new Map<string, Array<{ name: string; description: string }>>();
 
     commands.forEach((command) => {
-        // Extract category from command data or default to 'Utility'
+        // Extrair categoria ou usar 'Utility' como padrão
         const category = (command as any).category || 'Utility';
 
         if (!categories.has(category)) {
@@ -91,11 +91,19 @@ async function showAllCommands(interaction: ChatInputCommandInteraction): Promis
         });
     });
 
-    // Build embed
-    const embed = infoEmbed('📚 Help - Command List')
-        .setDescription(
-            'Here are all available commands. Use `/help <command>` for detailed information about a specific command.'
-        );
+    // Construir embed
+    const embed = infoEmbed('📚 Ajuda - Lista de comandos')
+        .setDescription('Veja todos os comandos disponíveis. Use `/help <command>` para detalhes de um comando específico.');
+
+    const categoryLabels: Record<string, string> = {
+        'Utility': 'Utilidades',
+        'Moderation': 'Moderação',
+        'Economy': 'Economia',
+        'Fun': 'Diversão',
+        'Music': 'Música',
+        'Games': 'Jogos',
+        'Admin': 'Administração',
+    };
 
     // Add fields for each category
     categories.forEach((commands, category) => {
@@ -104,13 +112,13 @@ async function showAllCommands(interaction: ChatInputCommandInteraction): Promis
             .join('\n');
 
         embed.addFields({
-            name: `${getCategoryEmoji(category)} ${category}`,
-            value: commandList || 'No commands',
+            name: `${getCategoryEmoji(category)} ${categoryLabels[category] || category}`,
+            value: commandList || 'Nenhum comando',
             inline: false,
         });
     });
 
-    embed.setFooter({ text: `Total Commands: ${commands.size}` });
+    embed.setFooter({ text: `Total de comandos: ${commands.size}` });
 
     await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
 }

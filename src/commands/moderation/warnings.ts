@@ -4,12 +4,12 @@ import { prisma } from '../../services/database.js';
 
 export const data = new SlashCommandBuilder()
     .setName('warnings')
-    .setDescription('View warnings for a user')
+    .setDescription('Ver advertências de um usuário')
     .setDefaultMemberPermissions(PermissionFlagsBits.ModerateMembers)
     .addUserOption(option =>
         option
             .setName('user')
-            .setDescription('The user to view warnings for')
+            .setDescription('Usuário para consultar advertências')
             .setRequired(true)
     );
 

@@ -6,18 +6,18 @@ import { logger } from '../../utils/logger.js';
 
 export const data = new SlashCommandBuilder()
     .setName('rank')
-    .setDescription('View your or another user\'s level and XP')
+    .setDescription('Ver seu nível/XP ou de outro usuário')
     .addUserOption(option =>
         option
             .setName('user')
-            .setDescription('The user to view rank for')
+            .setDescription('Usuário para consultar nível/XP')
             .setRequired(false)
     );
 
 export async function execute(interaction: ChatInputCommandInteraction): Promise<void> {
     if (!interaction.guild) {
         await interaction.reply({
-            embeds: [errorEmbed('Error', 'This command can only be used in a server.')],
+            embeds: [errorEmbed('Erro', 'Este comando só pode ser usado em um servidor.')],
             flags: MessageFlags.Ephemeral,
         });
         return;
@@ -28,7 +28,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     // Check if target is a bot
     if (targetUser.bot) {
         await interaction.reply({
-            embeds: [errorEmbed('Error', 'Bots don\'t have levels.')],
+            embeds: [errorEmbed('Erro', 'Bots não possuem níveis.')],
             flags: MessageFlags.Ephemeral,
         });
         return;
@@ -47,7 +47,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
 
         if (!userLevel) {
             await interaction.reply({
-                embeds: [infoEmbed('No Data', `${targetUser.tag} hasn't earned any XP yet.`)],
+                embeds: [infoEmbed('Sem dados', `${targetUser.tag} ainda não ganhou XP.`)],
                 flags: MessageFlags.Ephemeral,
             });
             return;
@@ -82,15 +82,15 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         const embed = infoEmbed(`📊 Rank - ${targetUser.username}`)
             .setThumbnail(targetUser.displayAvatarURL({ size: 256 }))
             .addFields(
-                { name: '🏆 Rank', value: `#${rank}`, inline: true },
-                { name: '⭐ Level', value: userLevel.level.toString(), inline: true },
-                { name: '✨ Total XP', value: userLevel.xp.toLocaleString(), inline: true },
+                { name: '🏆 Posição', value: `#${rank}`, inline: true },
+                { name: '⭐ Nível', value: userLevel.level.toString(), inline: true },
+                { name: '✨ XP total', value: userLevel.xp.toLocaleString(), inline: true },
                 {
-                    name: '📈 Progress to Next Level',
+                    name: '📈 Progresso para o próximo nível',
                     value: [
                         progressBar,
                         `${xpProgress.toLocaleString()} / ${xpForCurrentLevel.toLocaleString()} XP (${progressPercentage}%)`,
-                        `**${xpNeeded.toLocaleString()} XP** needed for Level ${userLevel.level + 1}`,
+                        `Faltam **${xpNeeded.toLocaleString()} XP** para o nível ${userLevel.level + 1}`,
                     ].join('\n'),
                     inline: false,
                 }
@@ -103,7 +103,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         logger.error('Error in rank command:', error);
 
         const errorMessage = {
-            embeds: [errorEmbed('Error', 'Failed to fetch rank data. Please try again.')],
+            embeds: [errorEmbed('Erro', 'Falha ao buscar dados de rank. Tente novamente.')],
             flags: MessageFlags.Ephemeral,
         };
 

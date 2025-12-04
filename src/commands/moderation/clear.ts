@@ -6,12 +6,12 @@ import { logger } from '../../utils/logger.js';
 
 export const data = new SlashCommandBuilder()
     .setName('clear')
-    .setDescription('Delete multiple messages at once')
+    .setDescription('Apagar várias mensagens de uma vez')
     .setDefaultMemberPermissions(PermissionFlagsBits.ManageMessages)
     .addIntegerOption(option =>
         option
             .setName('amount')
-            .setDescription('Number of messages to delete (1-100)')
+            .setDescription('Quantidade de mensagens para apagar (1-100)')
             .setMinValue(1)
             .setMaxValue(100)
             .setRequired(true)
@@ -19,7 +19,7 @@ export const data = new SlashCommandBuilder()
     .addUserOption(option =>
         option
             .setName('user')
-            .setDescription('Only delete messages from this user')
+            .setDescription('Apagar apenas mensagens deste usuário')
             .setRequired(false)
     );
 

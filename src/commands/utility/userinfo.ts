@@ -3,11 +3,11 @@ import { infoEmbed } from '../../utils/embeds.js';
 
 export const data = new SlashCommandBuilder()
     .setName('userinfo')
-    .setDescription('Display information about a user')
+    .setDescription('Mostrar informações sobre um usuário')
     .addUserOption(option =>
         option
             .setName('user')
-            .setDescription('The user to get information about')
+            .setDescription('Usuário para ver informações')
             .setRequired(false)
     );
 
@@ -16,31 +16,31 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     const targetUser = interaction.options.getUser('user') || interaction.user;
     const member = interaction.guild?.members.cache.get(targetUser.id);
 
-    const embed = infoEmbed(`User Info: ${targetUser.tag}`)
+    const embed = infoEmbed(`Informações do usuário: ${targetUser.tag}`)
         .setThumbnail(targetUser.displayAvatarURL({ size: 256 }))
         .addFields(
             {
-                name: '👤 Username',
+                name: '👤 Usuário',
                 value: targetUser.username,
                 inline: true,
             },
             {
-                name: '🔖 Discriminator',
+                name: '🔖 Discriminador',
                 value: targetUser.discriminator,
                 inline: true,
             },
             {
-                name: '🆔 User ID',
+                name: '🆔 ID do usuário',
                 value: `\`${targetUser.id}\``,
                 inline: true,
             },
             {
                 name: '🤖 Bot',
-                value: targetUser.bot ? 'Yes' : 'No',
+                value: targetUser.bot ? 'Sim' : 'Não',
                 inline: true,
             },
             {
-                name: '📅 Account Created',
+                name: '📅 Conta criada',
                 value: time(targetUser.createdAt, TimestampStyles.RelativeTime),
                 inline: true,
             }
@@ -50,17 +50,17 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (member) {
         embed.addFields(
             {
-                name: '📥 Joined Server',
-                value: member.joinedAt ? time(member.joinedAt, TimestampStyles.RelativeTime) : 'Unknown',
+                name: '📥 Entrou no servidor',
+                value: member.joinedAt ? time(member.joinedAt, TimestampStyles.RelativeTime) : 'Desconhecido',
                 inline: true,
             },
             {
-                name: '🎨 Nickname',
-                value: member.nickname || 'None',
+                name: '🎨 Apelido',
+                value: member.nickname || 'Nenhum',
                 inline: true,
             },
             {
-                name: `📋 Roles [${member.roles.cache.size - 1}]`,
+                name: `📋 Cargos [${member.roles.cache.size - 1}]`,
                 value: getRolesList(member),
                 inline: false,
             }
@@ -95,13 +95,13 @@ function getRolesList(member: GuildMember): string {
         .map(role => role.toString());
 
     if (roles.length === 0) {
-        return 'None';
+        return 'Nenhum';
     }
 
     // Limit to first 10 roles to avoid exceeding embed limits
     if (roles.length > 10) {
         const remaining = roles.length - 10;
-        return roles.slice(0, 10).join(', ') + ` and ${remaining} more...`;
+        return roles.slice(0, 10).join(', ') + ` e mais ${remaining}...`;
     }
 
     return roles.join(', ');
