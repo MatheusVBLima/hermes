@@ -33,47 +33,42 @@ export async function execute(interaction: ChatInputCommandInteraction) {
 
         const query = interaction.options.getString('query', true);
 
-        await interaction.deferReply();
-
-        // Timeout de 30 segundos para evitar que fique "pensando" indefinidamente
-        const timeoutPromise = new Promise((_, reject) => {
-            setTimeout(() => reject(new Error('Timeout: O comando demorou muito para responder.')), 30000);
-        });
+        // Responder imediatamente para evitar timeout
+        await interaction.reply({ content: '🔍 Procurando a música...', ephemeral: false });
 
         try {
             const distube = getDistube();
-            
+
             logger.info(`[Play] Starting play for query: ${query}`);
             logger.info(`[Play] Voice channel: ${voiceChannel.id}, Text channel: ${interaction.channel?.id}`);
-            
-            // Race entre o play e o timeout
-            await Promise.race([
-                distube.play(voiceChannel, query, {
-                    member: member,
-                    textChannel: interaction.channel!,
-                }),
-                timeoutPromise,
-            ]);
+
+            // Iniciar o play (DisTube vai enviar a mensagem através dos eventos)
+            await distube.play(voiceChannel, query, {
+                member: member,
+                textChannel: interaction.channel!,
+            });
 
             logger.info(`[Play] Play command completed successfully`);
-            
-            // DisTube will send the message through events
-            await interaction.deleteReply();
+
+            // Deletar a mensagem "Procurando..." depois que o DisTube enviar a mensagem dele
+            setTimeout(() => {
+                interaction.deleteReply().catch(() => {});
+            }, 2000);
         } catch (error: any) {
             logger.error('Error in play command:', error);
             logger.error('Error details - message:', error?.message);
             logger.error('Error details - stack:', error?.stack);
-            
-            // Verificar se é erro de timeout ou parsing
+
+            // Verificar se é erro de parsing ou outros
             let errorMessage = 'Ocorreu um erro ao executar o comando.';
-            if (error.message?.includes('Timeout')) {
-                errorMessage = 'O comando demorou muito para responder. Isso pode ser causado por problemas com o YouTube. Tente novamente ou use uma URL direta.';
-            } else if (error.message?.includes('Deprecated') || error.message?.includes('JSON')) {
+            if (error.message?.includes('Deprecated') || error.message?.includes('JSON')) {
                 errorMessage = 'Erro ao processar a música. O YouTube pode estar bloqueando o acesso. Tente novamente em alguns instantes.';
+            } else if (error.message?.includes('NO_RESULT')) {
+                errorMessage = 'Não foi possível encontrar a música. Tente usar uma URL direta do YouTube.';
             } else if (error.message) {
                 errorMessage = error.message;
             }
-            
+
             const embed = errorEmbed('Erro', errorMessage);
             await interaction.editReply({ embeds: [embed] });
         }

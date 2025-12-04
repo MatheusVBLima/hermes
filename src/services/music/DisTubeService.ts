@@ -10,9 +10,10 @@ export function initializeDistube(client: Client): DisTube {
 
     distube = new DisTube(client, {
         emitNewSongOnly: true,
+        joinNewVoiceChannel: true,
         plugins: [
             new YtDlpPlugin({
-                update: true,
+                update: false, // Não atualizar automaticamente (mais rápido)
             }),
         ],
     });

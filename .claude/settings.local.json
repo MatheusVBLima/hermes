@@ -12,7 +12,9 @@
       "Bash(mkdir:*)",
       "Bash(npm run deploy-commands:guild:*)",
       "Bash(npm uninstall:*)",
-      "Bash(yt-dlp:*)"
+      "Bash(yt-dlp:*)",
+      "Bash(cd:*)",
+      "Bash(npm run dev:*)"
     ],
     "deny": [],
     "ask": []
