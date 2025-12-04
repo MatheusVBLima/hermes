@@ -2,6 +2,7 @@ import { Events, GuildMember, TextChannel } from 'discord.js';
 import { logger } from '../utils/logger.js';
 import { prisma } from '../services/database.js';
 import { successEmbed } from '../utils/embeds.js';
+import { logMemberJoin } from '../services/LogService.js';
 
 export const name = Events.GuildMemberAdd;
 export const once = false;
@@ -9,6 +10,9 @@ export const once = false;
 export async function execute(member: GuildMember): Promise<void> {
     try {
         logger.info(`New member joined: ${member.user.tag} in ${member.guild.name}`);
+
+        // Send log
+        await logMemberJoin(member);
 
         // Get guild configuration
         const guildConfig = await prisma.guild.findUnique({

@@ -1,4 +1,4 @@
-import { Client, GatewayIntentBits, Collection, REST, Routes } from 'discord.js';
+import { Client, GatewayIntentBits, Collection, REST, Routes, Partials } from 'discord.js';
 import { readdirSync } from 'fs';
 import { join, dirname } from 'path';
 import { fileURLToPath, pathToFileURL } from 'url';
@@ -42,7 +42,9 @@ class HermesBot {
                 GatewayIntentBits.MessageContent,
                 GatewayIntentBits.GuildPresences,
                 GatewayIntentBits.GuildVoiceStates,
+                GatewayIntentBits.GuildMessageReactions,
             ],
+            partials: [Partials.Message, Partials.Reaction, Partials.User],
         });
 
         this.commands = new Collection();

@@ -7,7 +7,7 @@ generator client {
 
 datasource db {
   provider = "sqlite"
-  url      = "file:./dev.db"
+  url      = env("DATABASE_URL")
 }
 
 // Guild Configuration
@@ -17,6 +17,13 @@ model Guild {
   welcomeChannelId  String?
   welcomeMessage    String?
   logChannelId      String?
+
+  // Log settings
+  logMessages       Boolean  @default(false)  // Message edit/delete logs
+  logMembers        Boolean  @default(false)  // Member join/leave logs
+  logModeration     Boolean  @default(false)  // Moderation action logs
+  logVoice          Boolean  @default(false)  // Voice channel logs
+
   createdAt         DateTime @default(now())
   updatedAt         DateTime @updatedAt
 
@@ -75,6 +82,32 @@ model UserLevel {
   @@index([guildId, xp])
 }
 
+// Level Roles
+model LevelRole {
+  id        Int      @id @default(autoincrement())
+  guildId   String
+  level     Int
+  roleId    String
+  createdAt DateTime @default(now())
+
+  @@unique([guildId, level])
+  @@index([guildId])
+}
+
+// XP Settings
+model XPSettings {
+  id              Int      @id @default(autoincrement())
+  guildId         String   @unique
+  xpEnabled       Boolean  @default(true)
+  xpMin           Int      @default(15)
+  xpMax           Int      @default(25)
+  xpCooldown      Int      @default(60000)   // 60 seconds
+  levelUpMessage  Boolean  @default(true)
+  ignoredChannels String?  // JSON array
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+}
+
 // User Economy (for Phase 4)
 model UserEconomy {
   id          Int      @id @default(autoincrement())
@@ -83,9 +116,161 @@ model UserEconomy {
   balance     Int      @default(0)
   lastDaily   DateTime?
   lastWork    DateTime?
+  lastRob     DateTime?
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
 
+  inventory   UserInventory[]
+
   @@unique([userId, guildId])
   @@index([guildId, balance])
+}
+
+// Shop Items
+model ShopItem {
+  id          Int      @id @default(autoincrement())
+  guildId     String
+  name        String
+  description String?
+  price       Int
+  itemType    String   // role, custom
+  roleId      String?  // If type is role
+  emoji       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@index([guildId])
+}
+
+// User Inventory
+model UserInventory {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  guildId     String
+  itemId      Int
+  itemName    String
+  quantity    Int      @default(1)
+  acquiredAt  DateTime @default(now())
+
+  economy     UserEconomy @relation(fields: [userId, guildId], references: [userId, guildId], onDelete: Cascade)
+
+  @@unique([userId, guildId, itemId])
+  @@index([userId, guildId])
+}
+
+// Reaction Roles
+model ReactionRole {
+  id        Int      @id @default(autoincrement())
+  guildId   String
+  channelId String
+  messageId String
+  emoji     String   // Emoji unicode or custom emoji ID
+  roleId    String
+  createdAt DateTime @default(now())
+
+  @@unique([messageId, emoji])
+  @@index([guildId])
+  @@index([messageId])
+}
+
+// Giveaways
+model Giveaway {
+  id          Int      @id @default(autoincrement())
+  guildId     String
+  channelId   String
+  messageId   String   @unique
+  hostId      String   // User who started the giveaway
+  prize       String
+  winners     Int      @default(1)
+  endsAt      DateTime
+  ended       Boolean  @default(false)
+  winnerIds   String?  // JSON array of winner IDs
+  createdAt   DateTime @default(now())
+
+  @@index([guildId])
+  @@index([endsAt])
+}
+
+// Auto-Moderation Settings
+model AutoMod {
+  id                 Int      @id @default(autoincrement())
+  guildId            String   @unique
+
+  // Anti-spam
+  antiSpamEnabled    Boolean  @default(false)
+  antiSpamThreshold  Int      @default(5)      // Messages in time window
+  antiSpamInterval   Int      @default(5000)   // Time window in ms
+  antiSpamAction     String   @default("timeout") // timeout, kick, warn
+
+  // Anti-flood (same message)
+  antiFloodEnabled   Boolean  @default(false)
+  antiFloodThreshold Int      @default(3)      // Same messages to trigger
+  antiFloodAction    String   @default("delete") // delete, timeout, warn
+
+  // Anti-link
+  antiLinkEnabled    Boolean  @default(false)
+  antiLinkAction     String   @default("delete") // delete, timeout, warn
+  allowedLinks       String?  // JSON array of allowed domains
+
+  // Bad words filter
+  badWordsEnabled    Boolean  @default(false)
+  badWordsList       String?  // JSON array of bad words
+  badWordsAction     String   @default("delete") // delete, timeout, warn
+
+  // Ignored channels/roles
+  ignoredChannels    String?  // JSON array of channel IDs
+  ignoredRoles       String?  // JSON array of role IDs
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+// Starboard
+model Starboard {
+  id               Int      @id @default(autoincrement())
+  guildId          String   @unique
+  channelId        String?  // Starboard channel
+  threshold        Int      @default(3)     // Stars needed
+  emoji            String   @default("⭐")  // Emoji to track
+  selfStar         Boolean  @default(false) // Allow self-starring
+  enabled          Boolean  @default(false)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+
+  starredMessages  StarredMessage[]
+}
+
+// Starred Messages
+model StarredMessage {
+  id              Int       @id @default(autoincrement())
+  guildId         String
+  channelId       String    // Original channel
+  messageId       String    @unique // Original message
+  starboardMsgId  String?   // Message in starboard channel
+  authorId        String
+  stars           Int       @default(0)
+  content         String?
+  attachments     String?   // JSON array
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  starboard       Starboard @relation(fields: [guildId], references: [guildId], onDelete: Cascade)
+
+  @@index([guildId])
+  @@index([messageId])
+}
+
+// Reminders
+model Reminder {
+  id          Int      @id @default(autoincrement())
+  userId      String
+  guildId     String?
+  channelId   String
+  message     String
+  remindAt    DateTime
+  completed   Boolean  @default(false)
+  createdAt   DateTime @default(now())
+
+  @@index([userId])
+  @@index([remindAt, completed])
 }

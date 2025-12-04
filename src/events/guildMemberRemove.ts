@@ -2,6 +2,7 @@ import { Events, GuildMember, TextChannel, PartialGuildMember } from 'discord.js
 import { logger } from '../utils/logger.js';
 import { prisma } from '../services/database.js';
 import { infoEmbed } from '../utils/embeds.js';
+import { logMemberLeave } from '../services/LogService.js';
 
 export const name = Events.GuildMemberRemove;
 export const once = false;
@@ -19,6 +20,9 @@ export async function execute(member: GuildMember | PartialGuildMember): Promise
         }
 
         logger.info(`Member left: ${member.user.tag} from ${member.guild.name}`);
+
+        // Send log
+        await logMemberLeave(member as GuildMember);
 
         // Get guild configuration
         const guildConfig = await prisma.guild.findUnique({

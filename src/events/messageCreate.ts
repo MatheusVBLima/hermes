@@ -2,6 +2,7 @@ import { Events, Message } from 'discord.js';
 import { logger } from '../utils/logger.js';
 import { prisma } from '../services/database.js';
 import { ensureGuild } from '../services/database.js';
+import { processMessage } from '../services/automod/AutoModService.js';
 
 export const name = Events.MessageCreate;
 export const once = false;
@@ -19,12 +20,42 @@ export async function execute(message: Message): Promise<void> {
     if (!message.guild || message.author.bot || message.system) return;
 
     try {
+        // Process auto-moderation first
+        const violated = await processMessage(message);
+        if (violated) {
+            // Message was deleted by auto-mod, don't give XP
+            return;
+        }
+
+        // Get XP settings
+        const xpSettings = await prisma.xPSettings.findUnique({
+            where: { guildId: message.guild.id },
+        });
+
+        // Check if XP is enabled
+        if (xpSettings && !xpSettings.xpEnabled) {
+            return;
+        }
+
+        // Check if channel is ignored
+        if (xpSettings?.ignoredChannels) {
+            const ignoredChannels = JSON.parse(xpSettings.ignoredChannels);
+            if (ignoredChannels.includes(message.channel.id)) {
+                return;
+            }
+        }
+
+        // Get XP configuration
+        const xpMin = xpSettings?.xpMin ?? XP_MIN;
+        const xpMax = xpSettings?.xpMax ?? XP_MAX;
+        const xpCooldown = xpSettings?.xpCooldown ?? XP_COOLDOWN;
+
         // Check cooldown
         const cooldownKey = `${message.guild.id}-${message.author.id}`;
         const now = Date.now();
         const lastXpTime = xpCooldowns.get(cooldownKey) || 0;
 
-        if (now - lastXpTime < XP_COOLDOWN) {
+        if (now - lastXpTime < xpCooldown) {
             return; // User is on cooldown
         }
 
@@ -32,7 +63,7 @@ export async function execute(message: Message): Promise<void> {
         await ensureGuild(message.guild.id, message.guild.name);
 
         // Calculate random XP
-        const xpGain = Math.floor(Math.random() * (XP_MAX - XP_MIN + 1)) + XP_MIN;
+        const xpGain = Math.floor(Math.random() * (xpMax - xpMin + 1)) + xpMin;
 
         // Get or create user level data
         let userLevel = await prisma.userLevel.findUnique({
@@ -84,7 +115,7 @@ export async function execute(message: Message): Promise<void> {
         // Check if user leveled up
         const newLevel = userLevel.level;
         if (!isNewUser && newLevel > oldLevel) {
-            await handleLevelUp(message, newLevel);
+            await handleLevelUp(message, newLevel, xpSettings);
         }
 
         logger.debug(`XP gained: ${message.author.tag} +${xpGain}XP (Level ${newLevel})`);
@@ -112,17 +143,43 @@ export function xpForLevel(level: number): number {
 /**
  * Handle level up event
  */
-async function handleLevelUp(message: Message, newLevel: number): Promise<void> {
+async function handleLevelUp(message: Message, newLevel: number, xpSettings: any): Promise<void> {
     try {
-        // Send level up message in the same channel
-        await message.channel.send({
-            content: `🎉 Congratulations ${message.author}! You've reached **Level ${newLevel}**!`,
+        // Check for level roles
+        const levelRole = await prisma.levelRole.findUnique({
+            where: {
+                guildId_level: {
+                    guildId: message.guild!.id,
+                    level: newLevel,
+                },
+            },
         });
 
-        logger.info(`Level up: ${message.author.tag} reached level ${newLevel} in ${message.guild?.name}`);
+        // Give role if configured
+        if (levelRole) {
+            const member = message.member;
+            const role = message.guild!.roles.cache.get(levelRole.roleId);
 
-        // TODO: Check for role rewards when implemented
-        // await checkRoleRewards(message, newLevel);
+            if (member && role) {
+                try {
+                    await member.roles.add(role, `Reached level ${newLevel}`);
+                    logger.info(`[LevelRole] Gave role ${role.name} to ${message.author.tag} for reaching level ${newLevel}`);
+                } catch (error) {
+                    logger.error(`[LevelRole] Failed to give role ${role.name} to ${message.author.tag}:`, error);
+                }
+            }
+        }
+
+        // Send level up message if enabled
+        const showMessage = xpSettings?.levelUpMessage ?? true;
+        if (showMessage) {
+            const roleMessage = levelRole ? `\n🎖️ You received the ${message.guild!.roles.cache.get(levelRole.roleId)} role!` : '';
+            await message.channel.send({
+                content: `🎉 Congratulations ${message.author}! You've reached **Level ${newLevel}**!${roleMessage}`,
+            });
+        }
+
+        logger.info(`Level up: ${message.author.tag} reached level ${newLevel} in ${message.guild?.name}`);
 
     } catch (error) {
         logger.error('Error sending level up message:', error);
