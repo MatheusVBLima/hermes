@@ -4,7 +4,11 @@
       "Bash(del \"c:\\Web Workspace\\hermes\\prisma\\prisma\\dev.db\")",
       "Bash(del \"c:\\Web Workspace\\hermes\\prisma\\dev.db\")",
       "Bash(set PRISMA_USER_CONSENT_FOR_DANGEROUS_AI_ACTION=sim:*)",
-      "Bash(del \"c:\\Web Workspace\\hermes\\prisma.config.ts\")"
+      "Bash(del \"c:\\Web Workspace\\hermes\\prisma.config.ts\")",
+      "Bash(dir:*)",
+      "Bash(npx prisma migrate:*)",
+      "Bash(npm run migrate:sqlite-to-pg:*)",
+      "Bash(npx prisma db pull:*)"
     ],
     "deny": [],
     "ask": []

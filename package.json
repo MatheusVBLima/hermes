@@ -12,7 +12,8 @@
     "deploy-commands:guild": "tsx src/deploy-commands.ts --guild",
     "check": "tsx scripts/check-setup.ts",
     "postinstall": "patch-package",
-    "update:cestari": "tsx scripts/update-cestari.ts"
+    "update:cestari": "tsx scripts/update-cestari.ts",
+    "migrate:sqlite-to-pg": "tsx scripts/migrate-sqlite-to-pg.ts"
   },
   "keywords": [
     "discord",
