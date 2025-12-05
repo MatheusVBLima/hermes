@@ -11,7 +11,8 @@
     "deploy-commands": "tsx src/deploy-commands.ts",
     "deploy-commands:guild": "tsx src/deploy-commands.ts --guild",
     "check": "tsx scripts/check-setup.ts",
-    "postinstall": "patch-package"
+    "postinstall": "patch-package",
+    "update:cestari": "tsx scripts/update-cestari.ts"
   },
   "keywords": [
     "discord",
