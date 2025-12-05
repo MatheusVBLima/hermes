@@ -13,7 +13,7 @@ const __dirname = dirname(__filename);
  * Command Deployment Script
  * Registers slash commands with Discord API
  */
-async function deployCommands(): Promise<void> {
+export async function deployCommands(): Promise<void> {
     try {
         // Validate configuration
         validateConfig();
@@ -94,5 +94,7 @@ async function deployCommands(): Promise<void> {
     }
 }
 
-// Run deployment
-deployCommands();
+// Run deployment if called directly
+if (import.meta.url === `file://${process.argv[1]}`) {
+    deployCommands();
+}
