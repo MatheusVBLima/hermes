@@ -155,12 +155,13 @@ class HermesBot {
             await this.loadCommands();
             await this.loadEvents();
 
+            // Start HTTP server for Render (required for free tier Web Services)
+            // Must start BEFORE login to satisfy Render's port binding requirement
+            this.startHealthServer();
+
             // Login to Discord
             logger.info('Logging in to Discord...');
             await this.client.login(config.discord.token);
-
-            // Start HTTP server for Render (required for free tier Web Services)
-            this.startHealthServer();
 
         } catch (error) {
             logger.error('Failed to start bot:', error);
