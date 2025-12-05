@@ -54,7 +54,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Este comando só pode ser usado em servidores.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -86,7 +86,7 @@ async function handleAdd(interaction: ChatInputCommandInteraction) {
     if (!roleObj) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Cargo não encontrado.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -99,7 +99,7 @@ async function handleAdd(interaction: ChatInputCommandInteraction) {
                     'Este cargo está acima ou no mesmo nível da minha posição de cargo mais alta. Mova meu cargo para uma posição superior.'
                 ),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -147,7 +147,7 @@ async function handleRemove(interaction: ChatInputCommandInteraction) {
     if (!levelRole) {
         await interaction.reply({
             embeds: [errorEmbed('Não Encontrado', `Não há cargo configurado para o nível ${level}.`)],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -175,7 +175,7 @@ async function handleList(interaction: ChatInputCommandInteraction) {
                 infoEmbed('Nenhum Cargo de Nível')
                     .setDescription('Não há cargos de nível configurados neste servidor.'),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }

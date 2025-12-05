@@ -21,7 +21,7 @@ export function execute(client: Client<true>) {
     const distube = getDistube();
 
     // When a song starts playing
-    distube.on('playSong', (queue, song) => {
+    distube.on('playSong' as any, (queue, song) => {
         logger.info(`[DisTube] ✅ playSong event fired for: ${song.name}`);
         logger.info(`[DisTube] Queue state - playing: ${queue.playing}, paused: ${queue.paused}, songs: ${queue.songs.length}`);
         logger.info(`[DisTube] Voice state - connected: ${queue.voice?.connection ? 'yes' : 'no'}, stream: ${queue.voice?.stream ? 'exists' : 'undefined'}`);
@@ -51,7 +51,7 @@ export function execute(client: Client<true>) {
     });
 
     // When a song is added to queue
-    distube.on('addSong', (queue, song) => {
+    distube.on('addSong' as any, (queue, song) => {
         logger.info(`[DisTube] addSong event fired for: ${song.name}, queue length: ${queue.songs.length}`);
         
         // Verificar se o bot está desmutado e se precisa iniciar a reprodução
@@ -131,7 +131,7 @@ export function execute(client: Client<true>) {
     });
 
     // Error handling
-    distube.on('error', (channelOrQueue, error) => {
+    distube.on('error' as any, (channelOrQueue, error) => {
         // O evento error pode receber diferentes assinaturas:
         // - error(channel, error) quando há um channel
         // - error(queue, error) quando há uma queue  
@@ -350,44 +350,44 @@ export function execute(client: Client<true>) {
     });
 
     // Handle empty queue - bot leaves channel
-    distube.on('empty', (queue) => {
+    distube.on('empty' as any, (queue) => {
         logger.info(`Voice channel is empty in guild ${queue.voiceChannel?.guild.id}`);
     });
 
     // Handle disconnection
-    distube.on('disconnect', (queue) => {
+    distube.on('disconnect' as any, (queue) => {
         logger.info(`Disconnected from voice channel in guild ${queue.voiceChannel?.guild.id}`);
     });
 
     // Handle finish - when queue ends
-    distube.on('finish', (queue) => {
+    distube.on('finish' as any, (queue) => {
         logger.info(`Queue finished in guild ${queue.voiceChannel?.guild.id}`);
     });
 
     // Log all DisTube events for debugging
     // Note: initQueue listener is also registered below for voice events
 
-    distube.on('addList', (queue, playlist) => {
+    distube.on('addList' as any, (queue, playlist) => {
         logger.info(`[DisTube] Playlist added: ${playlist.name} with ${playlist.songs.length} songs`);
     });
 
-    distube.on('noRelated', (queue) => {
+    distube.on('noRelated' as any, (queue) => {
         logger.warn(`[DisTube] No related songs found for queue in guild ${queue.voiceChannel?.guild.id}`);
     });
 
-    distube.on('searchResult', (message, result) => {
+    distube.on('searchResult' as any, (message, result) => {
         logger.info(`[DisTube] Search result received: ${result.length} results`);
     });
 
-    distube.on('searchCancel', (message) => {
+    distube.on('searchCancel' as any, (message) => {
         logger.info(`[DisTube] Search cancelled`);
     });
 
-    distube.on('searchInvalidAnswer', (message, answer) => {
+    distube.on('searchInvalidAnswer' as any, (message, answer) => {
         logger.warn(`[DisTube] Invalid search answer: ${answer}`);
     });
 
-    distube.on('searchNoResult', (message) => {
+    distube.on('searchNoResult' as any, (message) => {
         logger.warn(`[DisTube] No search results found`);
     });
 
@@ -448,7 +448,7 @@ export function execute(client: Client<true>) {
     });
 
     // Listen to voice events for debugging
-    distube.on('initQueue', (queue) => {
+    distube.on('initQueue' as any, (queue) => {
         logger.info(`[DisTube] Queue initialized in guild ${queue.voiceChannel?.guild.id}`);
         logger.info(`[DisTube] initQueue - Guild: ${queue.voiceChannel?.guild.id}`);
         

@@ -33,7 +33,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'This command can only be used in a server.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -49,7 +49,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (targetUser.id === interaction.user.id) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'You cannot timeout yourself.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -58,7 +58,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (targetUser.bot && targetUser.id === interaction.client.user.id) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'I cannot timeout myself.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -70,7 +70,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (!targetMember) {
             await interaction.reply({
                 embeds: [errorEmbed('Error', 'User is not in this server.')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -81,7 +81,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (targetMember.roles.highest.position >= executor.roles.highest.position) {
             await interaction.reply({
                 embeds: [errorEmbed('Error', 'You cannot timeout this user due to role hierarchy.')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -91,7 +91,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (targetMember.roles.highest.position >= botMember.roles.highest.position) {
             await interaction.reply({
                 embeds: [errorEmbed('Error', 'I cannot timeout this user due to role hierarchy.')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -99,7 +99,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (!targetMember.moderatable) {
             await interaction.reply({
                 embeds: [errorEmbed('Error', 'I cannot timeout this user. They may have higher permissions.')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -156,7 +156,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         logger.error('Error executing timeout command:', error);
         await interaction.reply({
             embeds: [errorEmbed('Error', 'Failed to timeout user. Please check my permissions and try again.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
     }
 }

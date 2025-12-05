@@ -25,7 +25,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'This command can only be used in a server.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -37,7 +37,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (targetUser.id === interaction.user.id) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'You cannot kick yourself.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -46,7 +46,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (targetUser.bot && targetUser.id === interaction.client.user.id) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'I cannot kick myself.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -58,7 +58,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (!targetMember) {
             await interaction.reply({
                 embeds: [errorEmbed('Error', 'User is not in this server.')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -69,7 +69,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (targetMember.roles.highest.position >= executor.roles.highest.position) {
             await interaction.reply({
                 embeds: [errorEmbed('Error', 'You cannot kick this user due to role hierarchy.')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -79,7 +79,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (targetMember.roles.highest.position >= botMember.roles.highest.position) {
             await interaction.reply({
                 embeds: [errorEmbed('Error', 'I cannot kick this user due to role hierarchy.')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -87,7 +87,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (!targetMember.kickable) {
             await interaction.reply({
                 embeds: [errorEmbed('Error', 'I cannot kick this user. They may have higher permissions.')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -141,7 +141,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         logger.error('Error executing kick command:', error);
         await interaction.reply({
             embeds: [errorEmbed('Error', 'Failed to kick user. Please check my permissions and try again.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
     }
 }

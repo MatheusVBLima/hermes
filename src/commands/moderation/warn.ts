@@ -25,7 +25,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'This command can only be used in a server.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -37,7 +37,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (targetUser.id === interaction.user.id) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'You cannot warn yourself.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -46,7 +46,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (targetUser.bot) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'You cannot warn bots.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -126,7 +126,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         logger.error('Error executing warn command:', error);
         await interaction.reply({
             embeds: [errorEmbed('Error', 'Failed to warn user. Please try again.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
     }
 }

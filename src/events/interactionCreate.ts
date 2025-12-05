@@ -40,7 +40,7 @@ async function handleChatInputCommand(interaction: ChatInputCommandInteraction):
         logger.warn(`Command not found: ${interaction.commandName}`);
         await interaction.reply({
             embeds: [errorEmbed('Command Not Found', 'This command does not exist or has been removed.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -64,7 +64,7 @@ async function handleChatInputCommand(interaction: ChatInputCommandInteraction):
                     'There was an error executing this command. Please try again later.'
                 ),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         };
 
         // Reply or follow up depending on interaction state
@@ -114,7 +114,7 @@ async function handleButton(interaction: ButtonInteraction): Promise<void> {
         logger.error('Error handling button interaction:', error);
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Ocorreu um erro ao processar sua ação.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         }).catch(() => {});
     }
 }
@@ -132,7 +132,7 @@ async function handleGiveawayEnter(interaction: ButtonInteraction): Promise<void
     if (!giveaway) {
         await interaction.reply({
             content: 'Este sorteio não existe mais.',
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -145,7 +145,7 @@ async function handleGiveawayEnter(interaction: ButtonInteraction): Promise<void
         } else {
             await interaction.reply({
                 content: 'Este sorteio já foi encerrado!',
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
         }
         return;
@@ -163,14 +163,14 @@ async function handleGiveawayEnter(interaction: ButtonInteraction): Promise<void
     if (users.has(interaction.user.id)) {
         await interaction.reply({
             content: '✅ Você já está participando deste sorteio!',
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
     } else {
         // Add user reaction
         await interaction.message.react('🎉');
         await interaction.reply({
             content: '🎉 Você entrou no sorteio! Boa sorte!',
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
     }
 }
@@ -182,7 +182,7 @@ async function endGiveawayNow(interaction: ButtonInteraction, giveaway: any): Pr
     // Get participants from reactions
     const reaction = interaction.message.reactions.cache.find(r => r.emoji.name === '🎉');
     const users = reaction ? await reaction.users.fetch() : new Map();
-    const participants = users.filter(u => !u.bot).map(u => u.id);
+    const participants = Array.from(users.values()).filter(u => !u.bot).map(u => u.id);
 
     // Mark as ended
     await prisma.giveaway.update({

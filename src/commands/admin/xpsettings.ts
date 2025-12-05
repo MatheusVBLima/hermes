@@ -103,7 +103,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Este comando só pode ser usado em servidores.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -168,7 +168,7 @@ async function handleRange(interaction: ChatInputCommandInteraction) {
     if (min > max) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'O XP mínimo não pode ser maior que o máximo.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -261,7 +261,7 @@ async function handleIgnoreChannel(interaction: ChatInputCommandInteraction) {
     if (ignoredChannels.includes(channel.id)) {
         await interaction.reply({
             embeds: [errorEmbed('Já Ignorado', 'Este canal já está sendo ignorado.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -299,7 +299,7 @@ async function handleUnignoreChannel(interaction: ChatInputCommandInteraction) {
     if (!settings?.ignoredChannels) {
         await interaction.reply({
             embeds: [errorEmbed('Não Ignorado', 'Este canal não está sendo ignorado.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -309,7 +309,7 @@ async function handleUnignoreChannel(interaction: ChatInputCommandInteraction) {
     if (!ignoredChannels.includes(channel.id)) {
         await interaction.reply({
             embeds: [errorEmbed('Não Ignorado', 'Este canal não está sendo ignorado.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }

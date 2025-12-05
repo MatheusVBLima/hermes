@@ -17,7 +17,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'This command can only be used in a server.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -39,7 +39,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (warnings.length === 0) {
             await interaction.reply({
                 embeds: [infoEmbed('No Warnings', `**${targetUser.tag}** has no warnings in this server.`)],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -68,12 +68,12 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
             embed.setFooter({ text: `Showing 10 of ${warnings.length} warnings` });
         }
 
-        await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+        await interaction.reply({ embeds: [embed], ephemeral: true });
 
     } catch (error) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'Failed to fetch warnings. Please try again.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
     }
 }

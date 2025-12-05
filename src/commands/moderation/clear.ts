@@ -27,7 +27,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'This command can only be used in a server.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -35,7 +35,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (!(interaction.channel instanceof TextChannel)) {
         await interaction.reply({
             embeds: [errorEmbed('Error', 'This command can only be used in text channels.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -45,7 +45,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
 
     try {
         // Defer reply since this might take a moment
-        await interaction.deferReply({ flags: MessageFlags.Ephemeral });
+        await interaction.deferReply({ ephemeral: true });
 
         // Fetch messages
         const messages = await interaction.channel.messages.fetch({ limit: amount + 1 }); // +1 to exclude the command itself
@@ -131,7 +131,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (interaction.deferred) {
             await interaction.editReply(errorMsg);
         } else {
-            await interaction.reply({ ...errorMsg, flags: MessageFlags.Ephemeral });
+            await interaction.reply({ ...errorMsg, ephemeral: true });
         }
     }
 }

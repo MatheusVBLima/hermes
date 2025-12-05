@@ -87,7 +87,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Este comando só pode ser usado em servidores.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -122,7 +122,7 @@ async function handleView(interaction: ChatInputCommandInteraction) {
                 infoEmbed('Loja Vazia')
                     .setDescription('Não há itens disponíveis na loja no momento.'),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -156,7 +156,7 @@ async function handleBuy(interaction: ChatInputCommandInteraction) {
     if (!item) {
         await interaction.reply({
             embeds: [errorEmbed('Item Não Encontrado', 'Este item não existe na loja.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -190,7 +190,7 @@ async function handleBuy(interaction: ChatInputCommandInteraction) {
                     `Você não tem moedas suficientes!\n\nSaldo: **${userEconomy.balance}** moedas\nPreço: **${item.price}** moedas`
                 ),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -201,7 +201,7 @@ async function handleBuy(interaction: ChatInputCommandInteraction) {
         if (member.roles.cache.has(item.roleId)) {
             await interaction.reply({
                 embeds: [errorEmbed('Já Possui', 'Você já possui este cargo!')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -267,7 +267,7 @@ async function handleAdd(interaction: ChatInputCommandInteraction) {
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
         await interaction.reply({
             embeds: [errorEmbed('Sem Permissão', 'Você precisa da permissão **Gerenciar Servidor**.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -283,7 +283,7 @@ async function handleAdd(interaction: ChatInputCommandInteraction) {
     if (type === 'role' && !role) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Você precisa especificar um cargo para itens do tipo "role".')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -320,7 +320,7 @@ async function handleRemove(interaction: ChatInputCommandInteraction) {
     if (!interaction.memberPermissions?.has(PermissionFlagsBits.ManageGuild)) {
         await interaction.reply({
             embeds: [errorEmbed('Sem Permissão', 'Você precisa da permissão **Gerenciar Servidor**.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -337,7 +337,7 @@ async function handleRemove(interaction: ChatInputCommandInteraction) {
     if (!item) {
         await interaction.reply({
             embeds: [errorEmbed('Item Não Encontrado', 'Este item não existe na loja.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }

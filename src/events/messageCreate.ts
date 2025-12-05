@@ -172,7 +172,7 @@ async function handleLevelUp(message: Message, newLevel: number, xpSettings: any
 
         // Send level up message if enabled
         const showMessage = xpSettings?.levelUpMessage ?? true;
-        if (showMessage) {
+        if (showMessage && 'send' in message.channel) {
             const roleMessage = levelRole ? `\n🎖️ You received the ${message.guild!.roles.cache.get(levelRole.roleId)} role!` : '';
             await message.channel.send({
                 content: `🎉 Congratulations ${message.author}! You've reached **Level ${newLevel}**!${roleMessage}`,

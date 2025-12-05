@@ -90,7 +90,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction) {
                     'Exemplos: `30m`, `2h`, `1d`'
                 ),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -99,7 +99,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction) {
     if (duration > 30 * 24 * 60 * 60 * 1000) {
         await interaction.reply({
             embeds: [errorEmbed('Tempo Muito Longo', 'O tempo máximo para um lembrete é de 30 dias.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -108,7 +108,7 @@ async function handleCreate(interaction: ChatInputCommandInteraction) {
     if (duration < 10000) {
         await interaction.reply({
             embeds: [errorEmbed('Tempo Muito Curto', 'O tempo mínimo para um lembrete é de 10 segundos.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -158,7 +158,7 @@ async function handleList(interaction: ChatInputCommandInteraction) {
                 infoEmbed('Sem Lembretes')
                     .setDescription('Você não tem nenhum lembrete ativo.'),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -173,7 +173,7 @@ async function handleList(interaction: ChatInputCommandInteraction) {
         .setDescription(list)
         .setFooter({ text: `Total: ${reminders.length} lembrete(s) | Use /remind cancel <id> para cancelar` });
 
-    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+    await interaction.reply({ embeds: [embed], ephemeral: true });
 }
 
 async function handleCancel(interaction: ChatInputCommandInteraction) {
@@ -190,7 +190,7 @@ async function handleCancel(interaction: ChatInputCommandInteraction) {
     if (!reminder) {
         await interaction.reply({
             embeds: [errorEmbed('Lembrete Não Encontrado', 'Este lembrete não existe ou já foi concluído.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -206,7 +206,7 @@ async function handleCancel(interaction: ChatInputCommandInteraction) {
                 `O lembrete **"${reminder.message}"** foi cancelado.`
             ),
         ],
-        flags: MessageFlags.Ephemeral,
+        ephemeral: true,
     });
 
     logger.info(`[Reminder] Cancelled reminder ${reminder.id} for ${interaction.user.tag}`);

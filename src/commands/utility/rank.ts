@@ -18,7 +18,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Este comando só pode ser usado em um servidor.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -29,7 +29,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (targetUser.bot) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Bots não possuem níveis.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -48,7 +48,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (!userLevel) {
             await interaction.reply({
                 embeds: [infoEmbed('Sem dados', `${targetUser.tag} ainda não ganhou XP.`)],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -104,7 +104,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
 
         const errorMessage = {
             embeds: [errorEmbed('Erro', 'Falha ao buscar dados de rank. Tente novamente.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         };
 
         if (interaction.replied || interaction.deferred) {

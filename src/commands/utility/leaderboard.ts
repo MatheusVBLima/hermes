@@ -18,7 +18,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Este comando só pode ser usado em um servidor.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -38,7 +38,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (totalUsers === 0) {
             await interaction.reply({
                 embeds: [infoEmbed('Ranking vazio', 'Nenhum usuário ganhou XP ainda. Comece a conversar para ganhar XP!')],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -49,7 +49,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
         if (page > totalPages) {
             await interaction.reply({
                 embeds: [errorEmbed('Página inválida', `Existem apenas ${totalPages} página(s) disponíveis.`)],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -142,7 +142,7 @@ export async function execute(interaction: ChatInputCommandInteraction): Promise
 
         const errorMessage = {
             embeds: [errorEmbed('Error', 'Failed to fetch leaderboard. Please try again.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         };
 
         if (interaction.replied || interaction.deferred) {

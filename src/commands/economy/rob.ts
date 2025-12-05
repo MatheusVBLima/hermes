@@ -22,7 +22,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Este comando só pode ser usado em servidores.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -33,7 +33,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (targetUser.id === interaction.user.id) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Você não pode roubar a si mesmo!')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -42,7 +42,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (targetUser.bot) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Você não pode roubar bots!')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -80,7 +80,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                         `Você precisa esperar **${minutes} minuto(s)** antes de roubar novamente.`
                     ),
                 ],
-                flags: MessageFlags.Ephemeral,
+                ephemeral: true,
             });
             return;
         }
@@ -95,7 +95,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     `Você precisa de no mínimo **${ROB_MIN_BALANCE}** moedas para roubar alguém.`
                 ),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -129,7 +129,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     `${targetUser.tag} não tem moedas suficientes para roubar! (mínimo: ${ROB_MIN_BALANCE})`
                 ),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }

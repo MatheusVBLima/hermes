@@ -15,7 +15,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) {
         await interaction.reply({
             content: 'Este comando só pode ser usado em servidores.',
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }

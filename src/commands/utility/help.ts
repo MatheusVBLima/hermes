@@ -36,7 +36,7 @@ async function showCommandDetails(
     if (!command) {
         await interaction.reply({
             embeds: [infoEmbed('Comando não encontrado', `O comando \`${commandName}\` não existe.`)],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -57,7 +57,7 @@ async function showCommandDetails(
         embed.addFields({ name: 'Opções', value: options, inline: false });
     }
 
-    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+    await interaction.reply({ embeds: [embed], ephemeral: true });
 }
 
 /**
@@ -69,7 +69,7 @@ async function showAllCommands(interaction: ChatInputCommandInteraction): Promis
     if (!commands || commands.size === 0) {
         await interaction.reply({
             embeds: [infoEmbed('Nenhum comando', 'Nenhum comando disponível no momento.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -120,7 +120,7 @@ async function showAllCommands(interaction: ChatInputCommandInteraction): Promis
 
     embed.setFooter({ text: `Total de comandos: ${commands.size}` });
 
-    await interaction.reply({ embeds: [embed], flags: MessageFlags.Ephemeral });
+    await interaction.reply({ embeds: [embed], ephemeral: true });
 }
 
 /**

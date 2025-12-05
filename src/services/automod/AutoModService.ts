@@ -156,7 +156,7 @@ async function checkSpam(message: Message, settings: AutoModSettings): Promise<b
         // Delete all spam messages
         try {
             const channel = message.channel as TextChannel;
-            await channel.bulkDelete(userData.messages.filter(m => !m.deleted));
+            await channel.bulkDelete(userData.messages.slice(0, 100));
         } catch (error) {
             logger.error('[AutoMod] Error deleting spam messages:', error);
         }
@@ -194,7 +194,7 @@ async function checkFlood(message: Message, settings: AutoModSettings): Promise<
             // Delete flood messages
             try {
                 const channel = message.channel as TextChannel;
-                await channel.bulkDelete(userData.messages.filter(m => !m.deleted));
+                await channel.bulkDelete(userData.messages.slice(0, 100));
             } catch (error) {
                 logger.error('[AutoMod] Error deleting flood messages:', error);
             }
@@ -224,14 +224,14 @@ async function takeAction(message: Message, action: string, reason: string): Pro
     try {
         switch (action) {
             case 'delete':
-                if (!message.deleted) {
+                if (true) {
                     await message.delete();
                 }
                 await sendWarning(message, reason);
                 break;
 
             case 'warn':
-                if (!message.deleted) {
+                if (true) {
                     await message.delete();
                 }
                 await sendWarning(message, reason);
@@ -239,7 +239,7 @@ async function takeAction(message: Message, action: string, reason: string): Pro
                 break;
 
             case 'timeout':
-                if (!message.deleted) {
+                if (true) {
                     await message.delete();
                 }
                 await member.timeout(5 * 60 * 1000, `[AutoMod] ${reason}`); // 5 minute timeout
@@ -247,7 +247,7 @@ async function takeAction(message: Message, action: string, reason: string): Pro
                 break;
 
             case 'kick':
-                if (!message.deleted) {
+                if (true) {
                     await message.delete();
                 }
                 await sendWarning(message, `${reason} - Você será expulso do servidor.`);
@@ -267,9 +267,11 @@ async function sendWarning(message: Message, reason: string): Promise<void> {
         .setTimestamp();
 
     try {
-        const warning = await message.channel.send({ embeds: [embed] });
-        // Delete warning after 5 seconds
-        setTimeout(() => warning.delete().catch(() => {}), 5000);
+        if ('send' in message.channel) {
+            const warning = await message.channel.send({ embeds: [embed] });
+            // Delete warning after 5 seconds
+            setTimeout(() => warning.delete().catch(() => {}), 5000);
+        }
     } catch (error) {
         logger.error('[AutoMod] Error sending warning:', error);
     }

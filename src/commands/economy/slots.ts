@@ -28,7 +28,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
     if (!interaction.guild) {
         await interaction.reply({
             embeds: [errorEmbed('Erro', 'Este comando só pode ser usado em servidores.')],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }
@@ -64,7 +64,7 @@ export async function execute(interaction: ChatInputCommandInteraction) {
                     `Você não tem moedas suficientes!\n\nSaldo: **${userEconomy.balance}** moedas\nAposta: **${bet}** moedas`
                 ),
             ],
-            flags: MessageFlags.Ephemeral,
+            ephemeral: true,
         });
         return;
     }

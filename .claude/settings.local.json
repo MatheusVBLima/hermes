@@ -8,7 +8,9 @@
       "Bash(dir:*)",
       "Bash(npx prisma migrate:*)",
       "Bash(npm run migrate:sqlite-to-pg:*)",
-      "Bash(npx prisma db pull:*)"
+      "Bash(npx prisma db pull:*)",
+      "Bash(npm run build:*)",
+      "Bash(find:*)"
     ],
     "deny": [],
     "ask": []
