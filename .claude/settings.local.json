@@ -10,7 +10,8 @@
       "Bash(npm run migrate:sqlite-to-pg:*)",
       "Bash(npx prisma db pull:*)",
       "Bash(npm run build:*)",
-      "Bash(find:*)"
+      "Bash(find:*)",
+      "Bash(npm install:*)"
     ],
     "deny": [],
     "ask": []
