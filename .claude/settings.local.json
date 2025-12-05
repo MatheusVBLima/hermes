@@ -11,7 +11,9 @@
       "Bash(npx prisma db pull:*)",
       "Bash(npm run build:*)",
       "Bash(find:*)",
-      "Bash(npm install:*)"
+      "Bash(npm install:*)",
+      "Bash(timeout 10 npm start:*)",
+      "Bash(timeout 15 npm start:*)"
     ],
     "deny": [],
     "ask": []

@@ -5,6 +5,7 @@ import { fileURLToPath, pathToFileURL } from 'url';
 import { config, validateConfig } from './config/config.js';
 import { logger } from './utils/logger.js';
 import { connectDatabase, disconnectDatabase } from './services/database.js';
+import { createServer } from 'http';
 
 // ESM equivalent of __dirname
 const __filename = fileURLToPath(import.meta.url);
@@ -158,10 +159,40 @@ class HermesBot {
             logger.info('Logging in to Discord...');
             await this.client.login(config.discord.token);
 
+            // Start HTTP server for Render (required for free tier Web Services)
+            this.startHealthServer();
+
         } catch (error) {
             logger.error('Failed to start bot:', error);
             process.exit(1);
         }
+    }
+
+    /**
+     * Start a simple HTTP server for health checks (Render requirement)
+     */
+    private startHealthServer(): void {
+        const PORT = process.env.PORT || 3000;
+
+        const server = createServer((req, res) => {
+            if (req.url === '/health' || req.url === '/') {
+                res.writeHead(200, { 'Content-Type': 'application/json' });
+                res.end(JSON.stringify({
+                    status: 'ok',
+                    bot: this.client.user?.tag || 'Not logged in',
+                    uptime: process.uptime(),
+                    guilds: this.client.guilds.cache.size,
+                    timestamp: new Date().toISOString()
+                }));
+            } else {
+                res.writeHead(404, { 'Content-Type': 'text/plain' });
+                res.end('Not Found');
+            }
+        });
+
+        server.listen(PORT, () => {
+            logger.success(`Health server listening on port ${PORT}`);
+        });
     }
 
     /**
